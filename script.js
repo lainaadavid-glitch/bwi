@@ -13,6 +13,8 @@
 const SUPABASE_URL =
     "https://yrqwttihowbzofqmormr.supabase.co";
 
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_I92CPrqzXZDb1HHaMfuFRQ_5lCTZ8Fu";
 
 /*
    IMPORTANT:
