@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,238 +9,349 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Register | Ekiti State Women of Influence
-    </title>
+    <title>Register | Ekiti State Women of Influence</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
-
 
 <body>
 
-<header class="header">
+<header class="site-header">
 
-    <a href="index.html" class="logo">
+    <div class="header-container">
 
-        <span>ESWI</span>
+        <a href="index.html" class="logo-area">
 
-        <div>
+            <img
+                src="logo.jpeg"
+                alt="Ekiti State Women of Influence"
+                class="site-logo"
+            >
 
-            <h1>
-                Ekiti State Women of Influence
-            </h1>
+            <div class="logo-text">
+                <h1>Ekiti State Women of Influence</h1>
+                <p>Ado Local Government</p>
+            </div>
 
-            <p>
-                Ado Local Government
-            </p>
-
-        </div>
-
-    </a>
-
-
-    <button
-        class="menu-btn"
-        id="menuBtn"
-    >
-        ☰
-    </button>
-
-
-    <nav id="navMenu">
-
-        <a href="index.html">
-            Home
         </a>
 
-        <a href="wards.html">
-            Wards
-        </a>
+        <button
+            class="menu-btn"
+            id="menuBtn"
+            type="button"
+        >
+            ☰
+        </button>
 
-        <a href="register.html">
-            Register
-        </a>
+        <nav class="main-nav" id="navMenu">
 
-        <a href="admin.html">
-            Admin
-        </a>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="wards.html">Wards</a>
+            <a href="register.html">Register</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Admin</a>
 
-    </nav>
+        </nav>
+
+    </div>
 
 </header>
 
 
-<main>
+<section class="page-header">
 
-<section class="page-hero">
+    <div class="container">
 
-    <p class="section-label">
-        JOIN THE MOVEMENT
-    </p>
+        <h2>Membership Registration</h2>
 
-    <h2>
-        Membership Registration
-    </h2>
+        <p>
+            Register with Ekiti State Women of Influence,
+            Ado Local Government.
+        </p>
 
-    <p>
-        Complete the form below. Your registration
-        will be reviewed by the administrator.
-    </p>
+    </div>
 
 </section>
 
 
-<section class="section">
+<main class="section">
 
-<form id="registrationForm">
+    <div class="container">
 
+        <div class="form-container">
 
-    <div class="form-grid">
+            <div class="section-title">
 
+                <h2>Register</h2>
 
-        <div class="form-group">
+                <p>
+                    Complete the form below.
+                    Your registration will be reviewed
+                    by the Ado LG administrator.
+                </p>
 
-            <label for="fullName">
-                Full Name *
-            </label>
-
-            <input
-                type="text"
-                id="fullName"
-                placeholder="Enter your full name"
-                required
-            >
-
-        </div>
+            </div>
 
 
-        <div class="form-group">
-
-            <label for="phone">
-                Phone Number *
-            </label>
-
-            <input
-                type="tel"
-                id="phone"
-                placeholder="08012345678"
-                required
-            >
-
-        </div>
+            <form id="registrationForm">
 
 
-        <div class="form-group">
+                <!-- FULL NAME -->
 
-            <label for="wardSelect">
-                Select Your Ward *
-            </label>
+                <div class="form-group">
 
-            <select
-                id="wardSelect"
-                required
-            >
+                    <label for="fullName">
+                        Full Name
+                    </label>
 
-                <option value="">
-                    Select your ward
-                </option>
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        placeholder="Enter your full name"
+                        required
+                    >
 
-            </select>
-
-        </div>
+                </div>
 
 
-        <div class="form-group">
+                <!-- PHONE -->
 
-            <label for="role">
-                Area of Influence
-            </label>
+                <div class="form-group">
 
-            <select id="role">
+                    <label for="phone">
+                        Phone Number
+                    </label>
 
-                <option value="">
-                    Select an area
-                </option>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        required
+                    >
 
-                <option>
-                    Business
-                </option>
+                </div>
 
-                <option>
-                    Education
-                </option>
 
-                <option>
-                    Community Development
-                </option>
+                <!-- WARD -->
 
-                <option>
-                    Healthcare
-                </option>
+                <div class="form-group">
 
-                <option>
-                    Entrepreneurship
-                </option>
+                    <label for="ward">
+                        Ward
+                    </label>
 
-                <option>
-                    Agriculture
-                </option>
+                    <select
+                        id="ward"
+                        name="ward"
+                        required
+                    >
 
-                <option>
-                    Politics
-                </option>
+                        <option value="">
+                            Select your ward
+                        </option>
 
-                <option>
-                    Other
-                </option>
+                        <option value="1">
+                            Ward 1
+                        </option>
 
-            </select>
+                        <option value="2">
+                            Ward 2
+                        </option>
+
+                        <option value="3">
+                            Ward 3
+                        </option>
+
+                        <option value="4">
+                            Ward 4
+                        </option>
+
+                        <option value="5">
+                            Ward 5
+                        </option>
+
+                        <option value="6">
+                            Ward 6
+                        </option>
+
+                        <option value="7">
+                            Ward 7
+                        </option>
+
+                        <option value="8">
+                            Ward 8
+                        </option>
+
+                        <option value="9">
+                            Ward 9
+                        </option>
+
+                        <option value="10">
+                            Ward 10
+                        </option>
+
+                        <option value="11">
+                            Ward 11
+                        </option>
+
+                        <option value="12">
+                            Ward 12
+                        </option>
+
+                        <option value="13">
+                            Ward 13
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- POLLING BOOTH -->
+
+                <div class="form-group">
+
+                    <label for="pollingBooth">
+                        Polling Booth
+                    </label>
+
+                    <input
+                        type="text"
+                        id="pollingBooth"
+                        name="pollingBooth"
+                        placeholder="Enter your polling booth"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ACCOUNT NAME -->
+
+                <div class="form-group">
+
+                    <label for="accountName">
+                        Account Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="accountName"
+                        name="accountName"
+                        placeholder="Enter account name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- BANK NAME -->
+
+                <div class="form-group">
+
+                    <label for="bankName">
+                        Bank Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="bankName"
+                        name="bankName"
+                        placeholder="Enter bank name"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn primary"
+                    id="submitBtn"
+                >
+                    Submit Registration
+                </button>
+
+
+                <p
+                    id="formMessage"
+                    class="form-message"
+                ></p>
+
+
+            </form>
 
         </div>
 
     </div>
-
-
-    <div class="form-group">
-
-        <label for="message">
-            Tell us about yourself
-        </label>
-
-        <textarea
-            id="message"
-            rows="5"
-            placeholder="Briefly describe your work or community impact"
-        ></textarea>
-
-    </div>
-
-
-    <button
-        type="submit"
-        class="btn primary"
-    >
-        Submit Registration
-    </button>
-
-
-    <p id="formMessage"></p>
-
-</form>
-
-</section>
 
 </main>
 
 
-<footer>
+<footer class="site-footer">
 
-    <p>
-        © 2026 Ekiti State Women of Influence —
-        Ado Local Government.
-    </p>
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <div>
+
+                <img
+                    src="logo.jpeg"
+                    alt="Logo"
+                    class="footer-logo"
+                >
+
+                <h3>
+                    Ekiti State Women of Influence
+                </h3>
+
+                <p>
+                    Ado Local Government
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h3>Quick Links</h3>
+
+                <p>
+                    <a href="index.html">Home</a>
+                </p>
+
+                <p>
+                    <a href="wards.html">Wards</a>
+                </p>
+
+                <p>
+                    <a href="register.html">Register</a>
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h3>Contact</h3>
+
+                <p>
+                    Ado LGA Coordinator
+                </p>
+
+                <p>
+                    08061254006
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </footer>
 
@@ -249,5 +359,4 @@
 <script src="script.js"></script>
 
 </body>
-
 </html>
