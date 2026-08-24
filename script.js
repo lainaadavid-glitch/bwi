@@ -1,40 +1,74 @@
-/* =========================================================
+/* ============================================================
    EKITI STATE WOMEN OF INFLUENCE
    ADO LOCAL GOVERNMENT
 
-   SUPABASE WEBSITE SCRIPT
-========================================================= */
+   SUPABASE + REGISTRATION + ADMIN PANEL
+============================================================ */
 
 
-/* =========================================================
-   SUPABASE CONFIG
-========================================================= */
+/* ============================================================
+   SUPABASE CONFIGURATION
+============================================================ */
 
 const SUPABASE_URL =
     "https://yrqwttihowbzofqmormr.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_I92CPrqzXZDb1HHaMfuFRQ_5lCTZ8Fu";
-
-/*
-   IMPORTANT:
-
-   Put your sb_publishable_... key here.
-
-   NEVER put your sb_secret_... key here.
-*/
 
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_I92CPrqzXZDb1HHaMfuFRQ_5lCTZ8Fu";
 
-/* =========================================================
-   BASIC SUPABASE REQUEST
-========================================================= */
+
+/* ============================================================
+   CHECK SUPABASE CONFIG
+============================================================ */
+
+if (
+    !SUPABASE_URL ||
+    !SUPABASE_PUBLISHABLE_KEY ||
+    SUPABASE_PUBLISHABLE_KEY ===
+        "YOUR_SUPABASE_PUBLISHABLE_KEY"
+) {
+
+    console.error(
+        "Supabase is not configured."
+    );
+
+}
+
+
+/* ============================================================
+   SUPABASE REST REQUEST
+============================================================ */
 
 async function supabaseRequest(
     endpoint,
-    options = {}
+    options = {},
+    token = SUPABASE_PUBLISHABLE_KEY
 ) {
+
+    const headers = {
+
+        "Content-Type":
+            "application/json",
+
+        "apikey":
+            SUPABASE_PUBLISHABLE_KEY,
+
+        "Authorization":
+            `Bearer ${token}`
+
+    };
+
+
+    if (options.headers) {
+
+        Object.assign(
+            headers,
+            options.headers
+        );
+
+    }
+
 
     const response =
         await fetch(
@@ -43,20 +77,7 @@ async function supabaseRequest(
 
                 ...options,
 
-                headers: {
-
-                    "Content-Type":
-                        "application/json",
-
-                    "apikey":
-                        SUPABASE_PUBLISHABLE_KEY,
-
-                    "Authorization":
-                        `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-
-                    ...(options.headers || {})
-
-                }
+                headers
 
             }
         );
@@ -89,17 +110,34 @@ async function supabaseRequest(
     if (!response.ok) {
 
         console.error(
-            "Supabase error:",
+            "Supabase request failed:",
+            response.status,
             data
         );
 
 
+        let errorMessage =
+            `Supabase error ${response.status}`;
+
+
+        if (
+            data &&
+            typeof data === "object"
+        ) {
+
+            errorMessage =
+                data.message ||
+                data.msg ||
+                data.hint ||
+                data.error_description ||
+                data.details ||
+                errorMessage;
+
+        }
+
+
         throw new Error(
-            data?.message ||
-            data?.msg ||
-            data?.hint ||
-            data?.error_description ||
-            `Supabase error ${response.status}`
+            errorMessage
         );
 
     }
@@ -110,9 +148,9 @@ async function supabaseRequest(
 }
 
 
-/* =========================================================
-   HTML ESCAPE
-========================================================= */
+/* ============================================================
+   ESCAPE HTML
+============================================================ */
 
 function escapeHTML(
     value
@@ -129,22 +167,27 @@ function escapeHTML(
 
 
     return String(value)
+
         .replaceAll(
             "&",
             "&amp;"
         )
+
         .replaceAll(
             "<",
             "&lt;"
         )
+
         .replaceAll(
             ">",
             "&gt;"
         )
+
         .replaceAll(
             '"',
             "&quot;"
         )
+
         .replaceAll(
             "'",
             "&#039;"
@@ -153,9 +196,9 @@ function escapeHTML(
 }
 
 
-/* =========================================================
+/* ============================================================
    MOBILE MENU
-========================================================= */
+============================================================ */
 
 const menuBtn =
     document.getElementById(
@@ -176,7 +219,7 @@ if (
 
     menuBtn.addEventListener(
         "click",
-        function () {
+        () => {
 
             navMenu.classList.toggle(
                 "active"
@@ -188,9 +231,9 @@ if (
 }
 
 
-/* =========================================================
-   REGISTRATION
-========================================================= */
+/* ============================================================
+   REGISTRATION FORM
+============================================================ */
 
 const registrationForm =
     document.getElementById(
@@ -202,350 +245,18 @@ if (registrationForm) {
 
     registrationForm.addEventListener(
         "submit",
-        async function (event) {
-
-            event.preventDefault();
-
-
-            const message =
-                document.getElementById(
-                    "formMessage"
-                );
-
-
-            const submitBtn =
-                document.getElementById(
-                    "submitBtn"
-                );
-
-
-            /*
-               GET FORM VALUES
-            */
-
-            const fullName =
-                document
-                    .getElementById(
-                        "fullName"
-                    )
-                    .value
-                    .trim();
-
-
-            const phone =
-                document
-                    .getElementById(
-                        "phone"
-                    )
-                    .value
-                    .trim();
-
-
-            const ward =
-                document
-                    .getElementById(
-                        "ward"
-                    )
-                    .value;
-
-
-            const pollingBooth =
-                document
-                    .getElementById(
-                        "pollingBooth"
-                    )
-                    .value
-                    .trim();
-
-
-            const accountName =
-                document
-                    .getElementById(
-                        "accountName"
-                    )
-                    .value
-                    .trim();
-
-
-            const accountNumber =
-                document
-                    .getElementById(
-                        "accountNumber"
-                    )
-                    .value
-                    .trim();
-
-
-            const bankName =
-                document
-                    .getElementById(
-                        "bankName"
-                    )
-                    .value
-                    .trim();
-
-
-            /*
-               CLEAR OLD MESSAGE
-            */
-
-            message.textContent =
-                "";
-
-
-            message.style.color =
-                "";
-
-
-            /*
-               VALIDATION
-            */
-
-            if (!fullName) {
-
-                showFormError(
-                    "Please enter your full name."
-                );
-
-                return;
-
-            }
-
-
-            if (!phone) {
-
-                showFormError(
-                    "Please enter your phone number."
-                );
-
-                return;
-
-            }
-
-
-            if (!ward) {
-
-                showFormError(
-                    "Please select your ward."
-                );
-
-                return;
-
-            }
-
-
-            if (!pollingBooth) {
-
-                showFormError(
-                    "Please enter your polling booth."
-                );
-
-                return;
-
-            }
-
-
-            if (!accountName) {
-
-                showFormError(
-                    "Please enter the account name."
-                );
-
-                return;
-
-            }
-
-
-            /*
-               ACCOUNT NUMBER
-            */
-
-            if (
-                !/^[0-9]{10}$/.test(
-                    accountNumber
-                )
-            ) {
-
-                showFormError(
-                    "Account number must contain exactly 10 digits."
-                );
-
-                return;
-
-            }
-
-
-            if (!bankName) {
-
-                showFormError(
-                    "Please enter your bank name."
-                );
-
-                return;
-
-            }
-
-
-            /*
-               CHECK PUBLISHABLE KEY
-            */
-
-            if (
-                !SUPABASE_PUBLISHABLE_KEY ||
-                SUPABASE_PUBLISHABLE_KEY ===
-                    "YOUR_SUPABASE_PUBLISHABLE_KEY"
-            ) {
-
-                showFormError(
-                    "Supabase is not configured yet. Add your publishable key to script.js."
-                );
-
-                return;
-
-            }
-
-
-            /*
-               DISABLE BUTTON
-            */
-
-            submitBtn.disabled =
-                true;
-
-
-            submitBtn.textContent =
-                "Submitting...";
-
-
-            message.textContent =
-                "Submitting your registration...";
-
-
-            message.style.color =
-                "#7c1d4a";
-
-
-            try {
-
-                /*
-                   SEND TO SUPABASE
-                */
-
-                await supabaseRequest(
-                    "members",
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Prefer":
-                                "return=minimal"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                full_name:
-                                    fullName,
-
-                                phone:
-                                    phone,
-
-                                ward:
-                                    Number(
-                                        ward
-                                    ),
-
-                                polling_booth:
-                                    pollingBooth,
-
-                                account_name:
-                                    accountName,
-
-                                account_number:
-                                    accountNumber,
-
-                                bank_name:
-                                    bankName,
-
-                                status:
-                                    "pending"
-
-                            })
-
-                    }
-                );
-
-
-                /*
-                   SUCCESS
-                */
-
-                message.textContent =
-                    "Registration submitted successfully! Your application is now waiting for admin approval.";
-
-                message.style.color =
-                    "#166534";
-
-
-                /*
-                   CLEAR FORM
-                */
-
-                registrationForm.reset();
-
-
-            } catch (error) {
-
-                console.error(
-                    "REGISTRATION ERROR:",
-                    error
-                );
-
-
-                /*
-                   SHOW THE ACTUAL ERROR
-
-                   This makes debugging much easier.
-                */
-
-                message.textContent =
-                    "Registration failed: " +
-                    error.message;
-
-
-                message.style.color =
-                    "#b91c1c";
-
-            }
-
-
-            /*
-               ENABLE BUTTON
-            */
-
-            submitBtn.disabled =
-                false;
-
-
-            submitBtn.textContent =
-                "Submit Registration";
-
-        }
+        submitRegistration
     );
 
 }
 
 
-/* =========================================================
-   FORM ERROR HELPER
-========================================================= */
-
-function showFormError(
-    text
+async function submitRegistration(
+    event
 ) {
+
+    event.preventDefault();
+
 
     const message =
         document.getElementById(
@@ -553,368 +264,320 @@ function showFormError(
         );
 
 
-    if (!message) {
-        return;
-    }
-
-
-    message.textContent =
-        text;
-
-
-    message.style.color =
-        "#b91c1c";
-
-
-    message.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
-    });
-
-}
-
-
-/* =========================================================
-   WARD CARDS
-========================================================= */
-
-function createWardCards() {
-
-    const wardGrid =
+    const button =
         document.getElementById(
-            "wardGrid"
+            "submitBtn"
         );
 
 
-    if (!wardGrid) {
-        return;
-    }
+    const fullName =
+        document
+            .getElementById(
+                "fullName"
+            )
+            .value
+            .trim();
 
 
-    wardGrid.innerHTML = "";
-
-
-    for (
-        let ward = 1;
-        ward <= 13;
-        ward++
-    ) {
-
-        const card =
-            document.createElement(
-                "a"
-            );
-
-
-        card.className =
-            "ward-card";
-
-
-        card.href =
-            `ward.html?ward=${ward}`;
-
-
-        card.innerHTML = `
-
-            <div class="ward-number">
-                ${ward}
-            </div>
-
-            <h3>
-                Ward ${ward}
-            </h3>
-
-            <p>
-                View members
-            </p>
-
-        `;
-
-
-        wardGrid.appendChild(
-            card
-        );
-
-    }
-
-}
-
-
-createWardCards();
-
-
-/* =========================================================
-   PUBLIC WARD PAGE
-========================================================= */
-
-async function loadWardPage() {
-
-    const memberList =
-        document.getElementById(
-            "memberList"
-        );
-
-
-    if (!memberList) {
-        return;
-    }
-
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
+    const phone =
+        document
+            .getElementById(
+                "phone"
+            )
+            .value
+            .trim();
 
 
     const ward =
-        Number(
-            params.get(
+        document
+            .getElementById(
                 "ward"
             )
+            .value;
+
+
+    const pollingBooth =
+        document
+            .getElementById(
+                "pollingBooth"
+            )
+            .value
+            .trim();
+
+
+    const accountName =
+        document
+            .getElementById(
+                "accountName"
+            )
+            .value
+            .trim();
+
+
+    const accountNumber =
+        document
+            .getElementById(
+                "accountNumber"
+            )
+            .value
+            .trim();
+
+
+    const bankName =
+        document
+            .getElementById(
+                "bankName"
+            )
+            .value
+            .trim();
+
+
+    message.textContent =
+        "";
+
+
+    /* --------------------------------------------------------
+       VALIDATION
+    -------------------------------------------------------- */
+
+    if (!fullName) {
+
+        showMessage(
+            message,
+            "Please enter your full name.",
+            "error"
         );
-
-
-    const wardTitle =
-        document.getElementById(
-            "wardTitle"
-        );
-
-
-    if (
-        !ward ||
-        ward < 1 ||
-        ward > 13
-    ) {
-
-        memberList.innerHTML =
-            `
-            <div class="empty-state">
-                Invalid ward.
-            </div>
-            `;
 
         return;
 
     }
 
 
-    if (wardTitle) {
+    if (!phone) {
 
-        wardTitle.textContent =
-            `Ward ${ward}`;
+        showMessage(
+            message,
+            "Please enter your phone number.",
+            "error"
+        );
+
+        return;
 
     }
 
 
-    memberList.innerHTML =
-        `
-        <div class="empty-state">
-            Loading members...
-        </div>
-        `;
+    if (!ward) {
+
+        showMessage(
+            message,
+            "Please select your ward.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!pollingBooth) {
+
+        showMessage(
+            message,
+            "Please enter your polling booth.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!accountName) {
+
+        showMessage(
+            message,
+            "Please enter your account name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !/^[0-9]{10}$/.test(
+            accountNumber
+        )
+    ) {
+
+        showMessage(
+            message,
+            "Account number must contain exactly 10 digits.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!bankName) {
+
+        showMessage(
+            message,
+            "Please enter your bank name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /* --------------------------------------------------------
+       DISABLE BUTTON
+    -------------------------------------------------------- */
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "Submitting...";
+
+
+    showMessage(
+        message,
+        "Submitting registration...",
+        "info"
+    );
 
 
     try {
 
-        const members =
-            await supabaseRequest(
-                `members?ward=eq.${ward}&status=eq.accepted&select=id,full_name,phone,ward,polling_booth,exco_position&order=full_name.asc`,
-                {
-                    method: "GET"
-                }
-            );
+        /* ----------------------------------------------------
+           INSERT REGISTRATION
+        ---------------------------------------------------- */
 
+        await supabaseRequest(
+            "members",
+            {
 
-        if (
-            !members ||
-            members.length === 0
-        ) {
+                method:
+                    "POST",
 
-            memberList.innerHTML =
-                `
-                <div class="empty-state">
-                    No accepted members in this ward yet.
-                </div>
-                `;
+                headers: {
 
-            return;
+                    "Prefer":
+                        "return=minimal"
 
-        }
+                },
 
+                body:
+                    JSON.stringify({
 
-        memberList.innerHTML =
-            "";
+                        full_name:
+                            fullName,
 
+                        phone:
+                            phone,
 
-        members.forEach(
-            member => {
+                        ward:
+                            Number(
+                                ward
+                            ),
 
-                const row =
-                    document.createElement(
-                        "div"
-                    );
+                        polling_booth:
+                            pollingBooth,
 
+                        account_name:
+                            accountName,
 
-                row.className =
-                    "member-row";
+                        account_number:
+                            accountNumber,
 
+                        bank_name:
+                            bankName,
 
-                row.innerHTML = `
+                        status:
+                            "pending"
 
-                    <strong>
-                        ${escapeHTML(
-                            member.full_name
-                        )}
-                    </strong>
-
-                    <br>
-
-                    <small>
-                        Polling Booth:
-                        ${escapeHTML(
-                            member.polling_booth
-                        )}
-                    </small>
-
-                    ${
-                        member.exco_position
-                            ? `
-                                <br>
-
-                                <span class="exco-badge">
-                                    ${escapeHTML(
-                                        member.exco_position
-                                    )}
-                                </span>
-                            `
-                            : ""
-                    }
-
-                `;
-
-
-                memberList.appendChild(
-                    row
-                );
+                    })
 
             }
         );
 
 
+        /* ----------------------------------------------------
+           SUCCESS
+        ---------------------------------------------------- */
+
+        showMessage(
+            message,
+            "Registration submitted successfully! Your registration is now waiting for admin approval.",
+            "success"
+        );
+
+
+        registrationForm.reset();
+
+
     } catch (error) {
 
         console.error(
+            "REGISTRATION ERROR:",
             error
         );
 
 
-        memberList.innerHTML =
-            `
-            <div class="empty-state">
-                Unable to load members.
-            </div>
-            `;
+        showMessage(
+            message,
+            `Registration failed: ${error.message}`,
+            "error"
+        );
 
     }
+
+
+    button.disabled =
+        false;
+
+
+    button.textContent =
+        "Submit Registration";
 
 }
 
 
-loadWardPage();
+/* ============================================================
+   MESSAGE HELPER
+============================================================ */
 
+function showMessage(
+    element,
+    text,
+    type
+) {
 
-/* =========================================================
-   PUBLIC MEMBER COUNT
-========================================================= */
-
-async function loadPublicMemberCount() {
-
-    const counter =
-        document.getElementById(
-            "publicMemberCount"
-        );
-
-
-    if (!counter) {
+    if (!element) {
         return;
     }
 
 
-    try {
-
-        const response =
-            await fetch(
-                `${SUPABASE_URL}/rest/v1/members?status=eq.accepted&select=id`,
-                {
-
-                    headers: {
-
-                        "apikey":
-                            SUPABASE_PUBLISHABLE_KEY,
-
-                        "Authorization":
-                            `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-
-                        "Prefer":
-                            "count=exact"
-
-                    }
-
-                }
-            );
+    element.textContent =
+        text;
 
 
-        const range =
-            response.headers.get(
-                "content-range"
-            );
-
-
-        if (!range) {
-            return;
-        }
-
-
-        const count =
-            range.split(
-                "/"
-            )[1];
-
-
-        if (
-            count &&
-            count !== "*"
-        ) {
-
-            counter.textContent =
-                count;
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-    }
+    element.className =
+        `form-message ${type}`;
 
 }
 
 
-loadPublicMemberCount();
-
-
-/* =========================================================
-   SUPABASE AUTH
-========================================================= */
-
-let currentAdmin = null;
-
-
-/* =========================================================
-   GET ACCESS TOKEN
-========================================================= */
+/* ============================================================
+   AUTH STORAGE
+============================================================ */
 
 function getAccessToken() {
 
@@ -925,9 +588,497 @@ function getAccessToken() {
 }
 
 
-/* =========================================================
-   AUTHENTICATED ADMIN REQUEST
-========================================================= */
+function clearAuth() {
+
+    localStorage.removeItem(
+        "supabase_access_token"
+    );
+
+    localStorage.removeItem(
+        "supabase_refresh_token"
+    );
+
+}
+
+
+/* ============================================================
+   ADMIN PAGE ELEMENTS
+============================================================ */
+
+const adminLoginForm =
+    document.getElementById(
+        "adminLoginForm"
+    );
+
+
+const adminLogin =
+    document.getElementById(
+        "adminLogin"
+    );
+
+
+const adminDashboard =
+    document.getElementById(
+        "adminDashboard"
+    );
+
+
+/* ============================================================
+   ADMIN LOGIN
+============================================================ */
+
+if (adminLoginForm) {
+
+    adminLoginForm.addEventListener(
+        "submit",
+        adminLoginSubmit
+    );
+
+}
+
+
+async function adminLoginSubmit(
+    event
+) {
+
+    event.preventDefault();
+
+
+    const emailInput =
+        document.getElementById(
+            "adminEmail"
+        );
+
+
+    const passwordInput =
+        document.getElementById(
+            "adminPassword"
+        );
+
+
+    const message =
+        document.getElementById(
+            "adminLoginMessage"
+        );
+
+
+    const button =
+        document.getElementById(
+            "loginBtn"
+        );
+
+
+    const email =
+        emailInput.value.trim();
+
+
+    const password =
+        passwordInput.value;
+
+
+    if (!email || !password) {
+
+        showMessage(
+            message,
+            "Enter your email and password.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "Logging in...";
+
+
+    showMessage(
+        message,
+        "Connecting to Supabase...",
+        "info"
+    );
+
+
+    try {
+
+        /* ----------------------------------------------------
+           SUPABASE AUTH LOGIN
+        ---------------------------------------------------- */
+
+        const response =
+            await fetch(
+                `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            email:
+                                email,
+
+                            password:
+                                password
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+
+                data.error_description ||
+
+                data.msg ||
+
+                data.message ||
+
+                "Login failed."
+
+            );
+
+        }
+
+
+        if (
+            !data.access_token
+        ) {
+
+            throw new Error(
+                "Supabase did not return an access token."
+            );
+
+        }
+
+
+        /* ----------------------------------------------------
+           SAVE SESSION
+        ---------------------------------------------------- */
+
+        localStorage.setItem(
+            "supabase_access_token",
+            data.access_token
+        );
+
+
+        if (
+            data.refresh_token
+        ) {
+
+            localStorage.setItem(
+                "supabase_refresh_token",
+                data.refresh_token
+            );
+
+        }
+
+
+        showMessage(
+            message,
+            "Login successful. Loading dashboard...",
+            "success"
+        );
+
+
+        /* ----------------------------------------------------
+           SHOW DASHBOARD
+        ---------------------------------------------------- */
+
+        await openAdminDashboard(
+            data.user
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "ADMIN LOGIN ERROR:",
+            error
+        );
+
+
+        clearAuth();
+
+
+        showMessage(
+            message,
+            `Login failed: ${error.message}`,
+            "error"
+        );
+
+    }
+
+
+    button.disabled =
+        false;
+
+
+    button.textContent =
+        "Login";
+
+}
+
+
+/* ============================================================
+   OPEN ADMIN DASHBOARD
+============================================================ */
+
+async function openAdminDashboard(
+    user
+) {
+
+    if (!adminLogin ||
+        !adminDashboard) {
+
+        return;
+
+    }
+
+
+    adminLogin.style.display =
+        "none";
+
+
+    adminDashboard.style.display =
+        "block";
+
+
+    const emailElement =
+        document.getElementById(
+            "adminUserEmail"
+        );
+
+
+    if (emailElement) {
+
+        emailElement.textContent =
+            user?.email ||
+            "";
+
+    }
+
+
+    await loadAdminDashboard();
+
+}
+
+
+/* ============================================================
+   CHECK EXISTING ADMIN SESSION
+============================================================ */
+
+async function checkExistingAdminSession() {
+
+    if (
+        !adminLogin ||
+        !adminDashboard
+    ) {
+
+        return;
+
+    }
+
+
+    const token =
+        getAccessToken();
+
+
+    if (!token) {
+
+        adminLogin.style.display =
+            "block";
+
+        adminDashboard.style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${SUPABASE_URL}/auth/v1/user`,
+                {
+
+                    method:
+                        "GET",
+
+                    headers: {
+
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            `Bearer ${token}`
+
+                    }
+
+                }
+            );
+
+
+        const user =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Your session has expired."
+            );
+
+        }
+
+
+        await openAdminDashboard(
+            user
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "SESSION ERROR:",
+            error
+        );
+
+
+        clearAuth();
+
+
+        adminLogin.style.display =
+            "block";
+
+
+        adminDashboard.style.display =
+            "none";
+
+    }
+
+}
+
+
+checkExistingAdminSession();
+
+
+/* ============================================================
+   LOGOUT
+============================================================ */
+
+const logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
+
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener(
+        "click",
+        adminLogout
+    );
+
+}
+
+
+async function adminLogout() {
+
+    const token =
+        getAccessToken();
+
+
+    try {
+
+        if (token) {
+
+            await fetch(
+                `${SUPABASE_URL}/auth/v1/logout`,
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            `Bearer ${token}`
+
+                    }
+
+                }
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+
+    clearAuth();
+
+
+    if (adminDashboard) {
+
+        adminDashboard.style.display =
+            "none";
+
+    }
+
+
+    if (adminLogin) {
+
+        adminLogin.style.display =
+            "block";
+
+    }
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
+}
+
+
+/* ============================================================
+   ADMIN REST REQUEST
+============================================================ */
 
 async function adminRequest(
     endpoint,
@@ -947,574 +1098,106 @@ async function adminRequest(
     }
 
 
-    const response =
-        await fetch(
-            `${SUPABASE_URL}/rest/v1/${endpoint}`,
-            {
-
-                ...options,
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json",
-
-                    "apikey":
-                        SUPABASE_PUBLISHABLE_KEY,
-
-                    "Authorization":
-                        `Bearer ${token}`,
-
-                    ...(options.headers || {})
-
-                }
-
-            }
-        );
-
-
-    const text =
-        await response.text();
-
-
-    let data = null;
-
-
-    if (text) {
-
-        try {
-
-            data =
-                JSON.parse(text);
-
-        } catch {
-
-            data =
-                text;
-
-        }
-
-    }
-
-
-    if (!response.ok) {
-
-        console.error(
-            "ADMIN REQUEST ERROR:",
-            data
-        );
-
-
-        throw new Error(
-            data?.message ||
-            data?.hint ||
-            data?.msg ||
-            `Request failed (${response.status})`
-        );
-
-    }
-
-
-    return data;
-
-}
-
-
-/* =========================================================
-   ADMIN LOGIN
-========================================================= */
-
-const adminLoginForm =
-    document.getElementById(
-        "adminLoginForm"
-    );
-
-
-if (adminLoginForm) {
-
-    adminLoginForm.addEventListener(
-        "submit",
-        async function (event) {
-
-            event.preventDefault();
-
-
-            const email =
-                document
-                    .getElementById(
-                        "adminEmail"
-                    )
-                    .value
-                    .trim();
-
-
-            const password =
-                document
-                    .getElementById(
-                        "adminPassword"
-                    )
-                    .value;
-
-
-            const message =
-                document.getElementById(
-                    "adminLoginMessage"
-                );
-
-
-            const button =
-                document.getElementById(
-                    "loginBtn"
-                );
-
-
-            button.disabled =
-                true;
-
-
-            button.textContent =
-                "Logging in...";
-
-
-            message.textContent =
-                "";
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
-                        {
-
-                            method:
-                                "POST",
-
-                            headers: {
-
-                                "Content-Type":
-                                    "application/json",
-
-                                "apikey":
-                                    SUPABASE_PUBLISHABLE_KEY
-
-                            },
-
-                            body:
-                                JSON.stringify({
-
-                                    email:
-                                        email,
-
-                                    password:
-                                        password
-
-                                })
-
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data?.msg ||
-                        data?.error_description ||
-                        "Invalid email or password."
-                    );
-
-                }
-
-
-                localStorage.setItem(
-                    "supabase_access_token",
-                    data.access_token
-                );
-
-
-                localStorage.setItem(
-                    "supabase_refresh_token",
-                    data.refresh_token
-                );
-
-
-                message.textContent =
-                    "Login successful.";
-
-                message.style.color =
-                    "#166534";
-
-
-                await checkAdminSession();
-
-
-            } catch (error) {
-
-                console.error(
-                    "LOGIN ERROR:",
-                    error
-                );
-
-
-                message.textContent =
-                    error.message;
-
-
-                message.style.color =
-                    "#b91c1c";
-
-            }
-
-
-            button.disabled =
-                false;
-
-
-            button.textContent =
-                "Login";
-
-        }
+    return await supabaseRequest(
+        endpoint,
+        options,
+        token
     );
 
 }
 
 
-/* =========================================================
-   CHECK ADMIN SESSION
-========================================================= */
+/* ============================================================
+   LOAD ADMIN DASHBOARD
+============================================================ */
 
-async function checkAdminSession() {
-
-    const login =
-        document.getElementById(
-            "adminLogin"
-        );
-
-
-    const dashboard =
-        document.getElementById(
-            "adminDashboard"
-        );
-
-
-    if (
-        !login ||
-        !dashboard
-    ) {
-
-        return;
-
-    }
-
-
-    const token =
-        getAccessToken();
-
-
-    if (!token) {
-
-        login.style.display =
-            "block";
-
-        dashboard.style.display =
-            "none";
-
-        return;
-
-    }
-
+async function loadAdminDashboard() {
 
     try {
 
-        const response =
-            await fetch(
-                `${SUPABASE_URL}/auth/v1/user`,
-                {
+        await loadStatistics();
 
-                    headers: {
+        await loadPendingMembers();
 
-                        "apikey":
-                            SUPABASE_PUBLISHABLE_KEY,
+        await loadAcceptedMembers();
 
-                        "Authorization":
-                            `Bearer ${token}`
-
-                    }
-
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Session expired."
-            );
-
-        }
-
-
-        currentAdmin =
-            await response.json();
-
-
-        login.style.display =
-            "none";
-
-
-        dashboard.style.display =
-            "block";
-
-
-        await loadAdminData();
+        await loadMembersByWard();
 
         await loadExcoManager();
 
-
     } catch (error) {
 
         console.error(
+            "DASHBOARD ERROR:",
             error
         );
-
-
-        localStorage.removeItem(
-            "supabase_access_token"
-        );
-
-
-        localStorage.removeItem(
-            "supabase_refresh_token"
-        );
-
-
-        login.style.display =
-            "block";
-
-
-        dashboard.style.display =
-            "none";
 
     }
 
 }
 
 
-checkAdminSession();
+/* ============================================================
+   STATISTICS
+============================================================ */
+
+async function loadStatistics() {
+
+    const members =
+        await adminRequest(
+            "members?select=id,status"
+        );
 
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+    const pending =
+        members.filter(
+            m =>
+                m.status ===
+                "pending"
+        ).length;
 
-const logoutBtn =
-    document.getElementById(
-        "logoutBtn"
+
+    const accepted =
+        members.filter(
+            m =>
+                m.status ===
+                "accepted"
+        ).length;
+
+
+    const declined =
+        members.filter(
+            m =>
+                m.status ===
+                "declined"
+        ).length;
+
+
+    setText(
+        "pendingCount",
+        pending
     );
 
 
-if (logoutBtn) {
-
-    logoutBtn.addEventListener(
-        "click",
-        async function () {
-
-            const token =
-                getAccessToken();
+    setText(
+        "acceptedCount",
+        accepted
+    );
 
 
-            try {
-
-                if (token) {
-
-                    await fetch(
-                        `${SUPABASE_URL}/auth/v1/logout`,
-                        {
-
-                            method:
-                                "POST",
-
-                            headers: {
-
-                                "apikey":
-                                    SUPABASE_PUBLISHABLE_KEY,
-
-                                "Authorization":
-                                    `Bearer ${token}`
-
-                            }
-
-                        }
-                    );
-
-                }
-
-            } catch (error) {
-
-                console.error(
-                    error
-                );
-
-            }
-
-
-            localStorage.removeItem(
-                "supabase_access_token"
-            );
-
-
-            localStorage.removeItem(
-                "supabase_refresh_token"
-            );
-
-
-            window.location.reload();
-
-        }
+    setText(
+        "declinedCount",
+        declined
     );
 
 }
 
 
-/* =========================================================
-   LOAD ADMIN DATA
-========================================================= */
+/* ============================================================
+   PENDING MEMBERS
+============================================================ */
 
-async function loadAdminData() {
-
-    const pendingList =
-        document.getElementById(
-            "pendingList"
-        );
-
-
-    if (!pendingList) {
-        return;
-    }
-
-
-    try {
-
-        const members =
-            await adminRequest(
-                "members?select=*&order=created_at.desc"
-            );
-
-
-        const pending =
-            members.filter(
-                member =>
-                    member.status ===
-                    "pending"
-            );
-
-
-        const accepted =
-            members.filter(
-                member =>
-                    member.status ===
-                    "accepted"
-            );
-
-
-        const declined =
-            members.filter(
-                member =>
-                    member.status ===
-                    "declined"
-            );
-
-
-        setText(
-            "pendingCount",
-            pending.length
-        );
-
-
-        setText(
-            "acceptedCount",
-            accepted.length
-        );
-
-
-        setText(
-            "declinedCount",
-            declined.length
-        );
-
-
-        renderPending(
-            pending
-        );
-
-
-        renderAccepted(
-            accepted
-        );
-
-
-        renderWardMembers(
-            accepted
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        pendingList.innerHTML =
-            `
-            <div class="empty-state">
-                ${escapeHTML(
-                    error.message
-                )}
-            </div>
-            `;
-
-    }
-
-}
-
-
-/* =========================================================
-   SET TEXT
-========================================================= */
-
-function setText(
-    id,
-    value
-) {
-
-    const element =
-        document.getElementById(
-            id
-        );
-
-
-    if (element) {
-
-        element.textContent =
-            value;
-
-    }
-
-}
-
-
-/* =========================================================
-   PENDING REGISTRATIONS
-========================================================= */
-
-function renderPending(
-    members
-) {
+async function loadPendingMembers() {
 
     const container =
         document.getElementById(
@@ -1528,140 +1211,210 @@ function renderPending(
 
 
     container.innerHTML =
-        "";
+        `<div class="loading">
+            Loading registrations...
+        </div>`;
 
 
-    if (
-        members.length === 0
-    ) {
+    try {
+
+        const members =
+            await adminRequest(
+                "members?status=eq.pending&select=*&order=created_at.desc"
+            );
+
+
+        if (
+            !members ||
+            members.length === 0
+        ) {
+
+            container.innerHTML =
+                `
+                <div class="empty-state">
+                    No pending registrations.
+                </div>
+                `;
+
+            return;
+
+        }
+
 
         container.innerHTML =
-            `
-            <div class="empty-state">
-                No pending registrations.
-            </div>
-            `;
-
-        return;
-
-    }
+            "";
 
 
-    members.forEach(
-        member => {
+        members.forEach(
+            member => {
 
-            const item =
-                document.createElement(
-                    "div"
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "registration-item";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${escapeHTML(
+                            member.full_name
+                        )}
+                    </h3>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        ${escapeHTML(
+                            member.phone
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Ward:</strong>
+                        Ward ${member.ward}
+                    </p>
+
+                    <p>
+                        <strong>Polling Booth:</strong>
+                        ${escapeHTML(
+                            member.polling_booth
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Account Name:</strong>
+                        ${escapeHTML(
+                            member.account_name
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Account Number:</strong>
+                        ${escapeHTML(
+                            member.account_number
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Bank:</strong>
+                        ${escapeHTML(
+                            member.bank_name
+                        )}
+                    </p>
+
+                    <div class="registration-actions">
+
+                        <button
+                            type="button"
+                            class="small-btn accept-btn"
+                            data-id="${member.id}"
+                        >
+                            ✓ Accept
+                        </button>
+
+                        <button
+                            type="button"
+                            class="small-btn decline-btn"
+                            data-id="${member.id}"
+                        >
+                            ✕ Decline
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                const acceptButton =
+                    card.querySelector(
+                        ".accept-btn"
+                    );
+
+
+                const declineButton =
+                    card.querySelector(
+                        ".decline-btn"
+                    );
+
+
+                acceptButton.addEventListener(
+                    "click",
+                    () =>
+                        updateMemberStatus(
+                            member.id,
+                            "accepted"
+                        )
                 );
 
 
-            item.className =
-                "registration-item";
+                declineButton.addEventListener(
+                    "click",
+                    () =>
+                        updateMemberStatus(
+                            member.id,
+                            "declined"
+                        )
+                );
 
 
-            item.innerHTML = `
+                container.appendChild(
+                    card
+                );
 
-                <h4>
-                    ${escapeHTML(
-                        member.full_name
-                    )}
-                </h4>
+            }
+        );
 
-                <p>
-                    <strong>Phone:</strong>
-                    ${escapeHTML(
-                        member.phone
-                    )}
-                </p>
 
-                <p>
-                    <strong>Ward:</strong>
-                    Ward ${member.ward}
-                </p>
+    } catch (error) {
 
-                <p>
-                    <strong>Polling Booth:</strong>
-                    ${escapeHTML(
-                        member.polling_booth
-                    )}
-                </p>
-
-                <p>
-                    <strong>Account Name:</strong>
-                    ${escapeHTML(
-                        member.account_name
-                    )}
-                </p>
-
-                <p>
-                    <strong>Account Number:</strong>
-                    ${escapeHTML(
-                        member.account_number
-                    )}
-                </p>
-
-                <p>
-                    <strong>Bank:</strong>
-                    ${escapeHTML(
-                        member.bank_name
-                    )}
-                </p>
-
-                <div class="registration-actions">
-
-                    <button
-                        class="small-btn accept-btn"
-                        onclick="approveMember(${member.id})"
-                    >
-                        ✓ Accept
-                    </button>
-
-                    <button
-                        class="small-btn decline-btn"
-                        onclick="rejectMember(${member.id})"
-                    >
-                        ✕ Decline
-                    </button>
-
-                </div>
-
+        container.innerHTML =
+            `
+            <div class="empty-state error">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
             `;
 
-
-            container.appendChild(
-                item
-            );
-
-        }
-    );
+    }
 
 }
 
 
-/* =========================================================
-   APPROVE
-========================================================= */
+/* ============================================================
+   ACCEPT / DECLINE
+============================================================ */
 
-async function approveMember(
-    id
+async function updateMemberStatus(
+    id,
+    status
 ) {
 
-    if (
-        !confirm(
-            "Accept this registration?"
-        )
-    ) {
+    const action =
+        status === "accepted"
+            ? "accept"
+            : "decline";
 
+
+    const confirmed =
+        confirm(
+            `Are you sure you want to ${action} this registration?`
+        );
+
+
+    if (!confirmed) {
         return;
-
     }
 
 
     try {
 
         await adminRequest(
-            `members?id=eq.${id}`,
+            `members?id=eq.${encodeURIComponent(id)}`,
             {
 
                 method:
@@ -1678,7 +1431,7 @@ async function approveMember(
                     JSON.stringify({
 
                         status:
-                            "accepted",
+                            status,
 
                         reviewed_at:
                             new Date()
@@ -1690,13 +1443,18 @@ async function approveMember(
         );
 
 
-        await loadAdminData();
+        alert(
+            `Registration ${status} successfully.`
+        );
+
+
+        await loadAdminDashboard();
 
 
     } catch (error) {
 
         alert(
-            error.message
+            `Unable to update registration: ${error.message}`
         );
 
     }
@@ -1704,78 +1462,11 @@ async function approveMember(
 }
 
 
-/* =========================================================
-   REJECT
-========================================================= */
-
-async function rejectMember(
-    id
-) {
-
-    if (
-        !confirm(
-            "Decline this registration?"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        await adminRequest(
-            `members?id=eq.${id}`,
-            {
-
-                method:
-                    "PATCH",
-
-                headers: {
-
-                    "Prefer":
-                        "return=minimal"
-
-                },
-
-                body:
-                    JSON.stringify({
-
-                        status:
-                            "declined",
-
-                        reviewed_at:
-                            new Date()
-                                .toISOString()
-
-                    })
-
-            }
-        );
-
-
-        await loadAdminData();
-
-
-    } catch (error) {
-
-        alert(
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
+/* ============================================================
    ACCEPTED MEMBERS
-========================================================= */
+============================================================ */
 
-function renderAccepted(
-    members
-) {
+async function loadAcceptedMembers() {
 
     const container =
         document.getElementById(
@@ -1788,80 +1479,82 @@ function renderAccepted(
     }
 
 
-    container.innerHTML =
-        "";
+    try {
+
+        const members =
+            await adminRequest(
+                "members?status=eq.accepted&select=*&order=full_name.asc"
+            );
 
 
-    if (
-        members.length === 0
-    ) {
+        if (
+            !members ||
+            members.length === 0
+        ) {
 
-        container.innerHTML =
-            `
-            <div class="empty-state">
-                No accepted members yet.
-            </div>
-            `;
+            container.innerHTML =
+                `
+                <div class="empty-state">
+                    No accepted members yet.
+                </div>
+                `;
 
-        return;
+            return;
 
-    }
-
-
-    const wrapper =
-        document.createElement(
-            "div"
-        );
+        }
 
 
-    wrapper.className =
-        "member-table-wrapper";
+        let html = `
+
+            <div class="member-table-wrapper">
+
+                <table class="member-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Full Name
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Ward
+                            </th>
+
+                            <th>
+                                Polling Booth
+                            </th>
+
+                            <th>
+                                Account
+                            </th>
+
+                            <th>
+                                Bank
+                            </th>
+
+                            <th>
+                                EXCO
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+        `;
 
 
-    wrapper.innerHTML = `
+        members.forEach(
+            member => {
 
-        <table class="member-table">
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        Name
-                    </th>
-
-                    <th>
-                        Phone
-                    </th>
-
-                    <th>
-                        Ward
-                    </th>
-
-                    <th>
-                        Booth
-                    </th>
-
-                    <th>
-                        Account
-                    </th>
-
-                    <th>
-                        Bank
-                    </th>
-
-                    <th>
-                        EXCO
-                    </th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                ${members.map(
-                    member => `
+                html += `
 
                     <tr>
 
@@ -1906,36 +1599,54 @@ function renderAccepted(
                         <td>
                             ${escapeHTML(
                                 member.exco_position ||
-                                "Not selected"
+                                "Not assigned"
                             )}
                         </td>
 
                     </tr>
 
-                `
-                ).join("")}
+                `;
 
-            </tbody>
-
-        </table>
-
-    `;
+            }
+        );
 
 
-    container.appendChild(
-        wrapper
-    );
+        html += `
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        `;
+
+
+        container.innerHTML =
+            html;
+
+
+    } catch (error) {
+
+        container.innerHTML =
+            `
+            <div class="empty-state error">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
+            `;
+
+    }
 
 }
 
 
-/* =========================================================
-   WARD MEMBERS
-========================================================= */
+/* ============================================================
+   MEMBERS BY WARD
+============================================================ */
 
-function renderWardMembers(
-    members
-) {
+async function loadMembersByWard() {
 
     const container =
         document.getElementById(
@@ -1948,138 +1659,178 @@ function renderWardMembers(
     }
 
 
-    container.innerHTML =
-        "";
+    try {
 
-
-    for (
-        let ward = 1;
-        ward <= 13;
-        ward++
-    ) {
-
-        const wardMembers =
-            members.filter(
-                member =>
-                    Number(
-                        member.ward
-                    ) === ward
+        const members =
+            await adminRequest(
+                "members?status=eq.accepted&select=id,full_name,phone,ward,polling_booth,exco_position&order=ward.asc,full_name.asc"
             );
 
 
-        const section =
-            document.createElement(
-                "div"
+        container.innerHTML =
+            "";
+
+
+        for (
+            let ward = 1;
+            ward <= 13;
+            ward++
+        ) {
+
+            const wardMembers =
+                members.filter(
+                    member =>
+                        Number(
+                            member.ward
+                        ) === ward
+                );
+
+
+            const section =
+                document.createElement(
+                    "div"
+                );
+
+
+            section.className =
+                "ward-admin-section";
+
+
+            let rows = "";
+
+
+            wardMembers.forEach(
+                member => {
+
+                    rows += `
+
+                        <tr>
+
+                            <td>
+                                ${escapeHTML(
+                                    member.full_name
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    member.phone
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    member.polling_booth
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    member.exco_position ||
+                                    "—"
+                                )}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
             );
 
 
-        section.className =
-            "ward-admin-section";
+            section.innerHTML = `
 
+                <h3>
+                    Ward ${ward}
+                    (${wardMembers.length})
+                </h3>
 
-        section.innerHTML = `
+                ${
+                    wardMembers.length === 0
 
-            <h4>
-                Ward ${ward}
-                (${wardMembers.length})
-            </h4>
+                    ?
 
-            ${
-                wardMembers.length === 0
-                    ? `
-                        <p>
-                            No accepted members.
-                        </p>
-                      `
-                    : `
-                        <div class="member-table-wrapper">
-
-                            <table class="member-table">
-
-                                <thead>
-
-                                    <tr>
-
-                                        <th>
-                                            Name
-                                        </th>
-
-                                        <th>
-                                            Phone
-                                        </th>
-
-                                        <th>
-                                            Polling Booth
-                                        </th>
-
-                                        <th>
-                                            EXCO
-                                        </th>
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                    ${wardMembers.map(
-                                        member => `
-
-                                        <tr>
-
-                                            <td>
-                                                ${escapeHTML(
-                                                    member.full_name
-                                                )}
-                                            </td>
-
-                                            <td>
-                                                ${escapeHTML(
-                                                    member.phone
-                                                )}
-                                            </td>
-
-                                            <td>
-                                                ${escapeHTML(
-                                                    member.polling_booth
-                                                )}
-                                            </td>
-
-                                            <td>
-                                                ${escapeHTML(
-                                                    member.exco_position ||
-                                                    "—"
-                                                )}
-                                            </td>
-
-                                        </tr>
-
-                                    `
-                                    ).join("")}
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
                     `
-            }
+                    <p class="empty-state">
+                        No accepted members.
+                    </p>
+                    `
 
-        `;
+                    :
+
+                    `
+
+                    <div class="member-table-wrapper">
+
+                        <table class="member-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Name
+                                    </th>
+
+                                    <th>
+                                        Phone
+                                    </th>
+
+                                    <th>
+                                        Polling Booth
+                                    </th>
+
+                                    <th>
+                                        EXCO
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                ${rows}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    `
+
+                }
+
+            `;
 
 
-        container.appendChild(
-            section
-        );
+            container.appendChild(
+                section
+            );
+
+        }
+
+    } catch (error) {
+
+        container.innerHTML =
+            `
+            <div class="empty-state error">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
+            `;
 
     }
 
 }
 
 
-/* =========================================================
+/* ============================================================
    EXCO POSITIONS
-========================================================= */
+============================================================ */
 
 const EXCO_POSITIONS = [
 
@@ -2104,9 +1855,9 @@ const EXCO_POSITIONS = [
 ];
 
 
-/* =========================================================
-   LOAD EXCO
-========================================================= */
+/* ============================================================
+   LOAD EXCO MANAGER
+============================================================ */
 
 async function loadExcoManager() {
 
@@ -2136,13 +1887,13 @@ async function loadExcoManager() {
         EXCO_POSITIONS.forEach(
             position => {
 
-                const row =
+                const wrapper =
                     document.createElement(
                         "div"
                     );
 
 
-                row.className =
+                wrapper.className =
                     "exco-position";
 
 
@@ -2166,22 +1917,22 @@ async function loadExcoManager() {
                     position;
 
 
-                const emptyOption =
+                const empty =
                     document.createElement(
                         "option"
                     );
 
 
-                emptyOption.value =
+                empty.value =
                     "";
 
 
-                emptyOption.textContent =
+                empty.textContent =
                     "Select member";
 
 
                 select.appendChild(
-                    emptyOption
+                    empty
                 );
 
 
@@ -2221,18 +1972,18 @@ async function loadExcoManager() {
                 );
 
 
-                row.appendChild(
+                wrapper.appendChild(
                     label
                 );
 
 
-                row.appendChild(
+                wrapper.appendChild(
                     select
                 );
 
 
                 container.appendChild(
-                    row
+                    wrapper
                 );
 
             }
@@ -2241,14 +1992,9 @@ async function loadExcoManager() {
 
     } catch (error) {
 
-        console.error(
-            error
-        );
-
-
         container.innerHTML =
             `
-            <div class="empty-state">
+            <div class="empty-state error">
                 ${escapeHTML(
                     error.message
                 )}
@@ -2260,9 +2006,9 @@ async function loadExcoManager() {
 }
 
 
-/* =========================================================
+/* ============================================================
    SAVE EXCO
-========================================================= */
+============================================================ */
 
 const saveExcoBtn =
     document.getElementById(
@@ -2274,24 +2020,54 @@ if (saveExcoBtn) {
 
     saveExcoBtn.addEventListener(
         "click",
-        async function () {
+        saveExcoPositions
+    );
 
-            saveExcoBtn.disabled =
-                true;
-
-
-            saveExcoBtn.textContent =
-                "Saving...";
+}
 
 
-            try {
+async function saveExcoPositions() {
 
-                /*
-                   CLEAR OLD EXCO
-                */
+    const message =
+        document.getElementById(
+            "excoMessage"
+        );
+
+
+    saveExcoBtn.disabled =
+        true;
+
+
+    saveExcoBtn.textContent =
+        "Saving...";
+
+
+    try {
+
+        /* ----------------------------------------------------
+           GET ALL ACCEPTED MEMBERS
+        ---------------------------------------------------- */
+
+        const members =
+            await adminRequest(
+                "members?status=eq.accepted&select=id,exco_position"
+            );
+
+
+        /* ----------------------------------------------------
+           CLEAR EXISTING EXCO POSITIONS
+        ---------------------------------------------------- */
+
+        for (
+            const member of members
+        ) {
+
+            if (
+                member.exco_position
+            ) {
 
                 await adminRequest(
-                    "members?status=eq.accepted",
+                    `members?id=eq.${encodeURIComponent(member.id)}`,
                     {
 
                         method:
@@ -2315,94 +2091,167 @@ if (saveExcoBtn) {
                     }
                 );
 
+            }
 
-                /*
-                   ASSIGN NEW EXCO
-                */
-
-                const selects =
-                    document.querySelectorAll(
-                        "#excoManager select"
-                    );
+        }
 
 
-                for (
-                    const select of selects
-                ) {
+        /* ----------------------------------------------------
+           ASSIGN SELECTED POSITIONS
+        ---------------------------------------------------- */
 
-                    const memberId =
-                        select.value;
-
-
-                    const position =
-                        select.dataset.position;
+        const selects =
+            document.querySelectorAll(
+                "#excoManager select"
+            );
 
 
-                    if (!memberId) {
-                        continue;
-                    }
+        const selectedMembers =
+            new Set();
 
 
-                    await adminRequest(
-                        `members?id=eq.${memberId}`,
-                        {
+        for (
+            const select of selects
+        ) {
 
-                            method:
-                                "PATCH",
-
-                            headers: {
-
-                                "Prefer":
-                                    "return=minimal"
-
-                            },
-
-                            body:
-                                JSON.stringify({
-
-                                    exco_position:
-                                        position
-
-                                })
-
-                        }
-                    );
-
-                }
+            const memberId =
+                select.value;
 
 
-                alert(
-                    "EXCO positions saved successfully."
-                );
+            const position =
+                select.dataset.position;
 
 
-                await loadAdminData();
-
-                await loadExcoManager();
-
-
-            } catch (error) {
-
-                console.error(
-                    error
-                );
+            if (!memberId) {
+                continue;
+            }
 
 
-                alert(
-                    error.message
+            if (
+                selectedMembers.has(
+                    memberId
+                )
+            ) {
+
+                throw new Error(
+                    "A member cannot hold more than one EXCO position."
                 );
 
             }
 
 
-            saveExcoBtn.disabled =
-                false;
+            selectedMembers.add(
+                memberId
+            );
 
 
-            saveExcoBtn.textContent =
-                "Save EXCO Positions";
+            await adminRequest(
+                `members?id=eq.${encodeURIComponent(memberId)}`,
+                {
+
+                    method:
+                        "PATCH",
+
+                    headers: {
+
+                        "Prefer":
+                            "return=minimal"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            exco_position:
+                                position
+
+                        })
+
+                }
+            );
 
         }
+
+
+        showMessage(
+            message,
+            "EXCO positions saved successfully.",
+            "success"
+        );
+
+
+        await loadAcceptedMembers();
+
+        await loadMembersByWard();
+
+
+    } catch (error) {
+
+        console.error(
+            "EXCO ERROR:",
+            error
+        );
+
+
+        showMessage(
+            message,
+            `Unable to save EXCO: ${error.message}`,
+            "error"
+        );
+
+    }
+
+
+    saveExcoBtn.disabled =
+        false;
+
+
+    saveExcoBtn.textContent =
+        "Save EXCO Positions";
+
+}
+
+
+/* ============================================================
+   REFRESH BUTTON
+============================================================ */
+
+const refreshPendingBtn =
+    document.getElementById(
+        "refreshPendingBtn"
     );
+
+
+if (refreshPendingBtn) {
+
+    refreshPendingBtn.addEventListener(
+        "click",
+        loadAdminDashboard
+    );
+
+}
+
+
+/* ============================================================
+   HELPER
+============================================================ */
+
+function setText(
+    id,
+    value
+) {
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (element) {
+
+        element.textContent =
+            value;
+
+    }
 
 }
