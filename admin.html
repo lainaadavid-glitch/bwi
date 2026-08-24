@@ -14,321 +14,427 @@
         Admin | Ekiti State Women of Influence
     </title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
-
 <body>
 
-<header class="header">
 
-    <a href="index.html" class="logo">
+<header class="site-header">
 
-        <span>ESWI</span>
+    <div class="header-container">
 
-        <div>
+        <a
+            href="index.html"
+            class="logo-area"
+        >
 
-            <h1>
-                Ekiti State Women of Influence
-            </h1>
+            <img
+                src="logo.jpeg"
+                alt="Logo"
+                class="site-logo"
+            >
 
-            <p>
-                Ado Local Government
-            </p>
+            <div class="logo-text">
 
-        </div>
+                <h1>
+                    Ekiti State Women of Influence
+                </h1>
 
-    </a>
+                <p>
+                    Ado Local Government
+                </p>
 
+            </div>
 
-    <button
-        class="menu-btn"
-        id="menuBtn"
-    >
-        ☰
-    </button>
-
-
-    <nav id="navMenu">
-
-        <a href="index.html">
-            Home
         </a>
 
-        <a href="wards.html">
-            Wards
+        <a
+            href="index.html"
+            class="btn secondary"
+        >
+            Back to Website
         </a>
 
-        <a href="register.html">
-            Register
-        </a>
-
-        <a href="admin.html">
-            Admin
-        </a>
-
-    </nav>
+    </div>
 
 </header>
 
 
-<main>
+<main class="admin-page">
 
-<section class="page-hero">
-
-    <p class="section-label">
-        ADMINISTRATION
-    </p>
-
-    <h2>
-        Admin Panel
-    </h2>
-
-    <p>
-        Manage registrations and ward executives.
-    </p>
-
-</section>
+    <div class="container">
 
 
-<section class="admin-section">
+        <!-- LOGIN -->
 
-
-    <!-- LOGIN -->
-
-    <div
-        id="adminLogin"
-        class="admin-card"
-    >
-
-        <h3>
-            Administrator Login
-        </h3>
-
-        <p class="admin-description">
-            Authorized administrators only.
-        </p>
-
-
-        <div class="form-group">
-
-            <label for="adminUsername">
-                Username
-            </label>
-
-            <input
-                type="text"
-                id="adminUsername"
-                placeholder="Enter username"
-            >
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="adminPassword">
-                Password
-            </label>
-
-            <input
-                type="password"
-                id="adminPassword"
-                placeholder="Enter password"
-            >
-
-        </div>
-
-
-        <button
-            id="adminLoginBtn"
-            class="btn primary"
-            type="button"
+        <div
+            class="admin-login"
+            id="adminLogin"
         >
-            Login
-        </button>
+
+            <h2>
+                Admin Login
+            </h2>
 
 
-        <p id="adminLoginMessage"></p>
-
-    </div>
-
-
-    <!-- DASHBOARD -->
-
-    <div
-        id="adminDashboard"
-        class="admin-dashboard"
-    >
-
-        <div class="admin-topbar">
-
-            <div>
-
-                <p class="section-label">
-                    CONTROL PANEL
-                </p>
-
-                <h3>
-                    Administrator Dashboard
-                </h3>
-
-            </div>
-
-
-            <button
-                id="adminLogoutBtn"
-                class="btn logout-btn"
+            <form
+                id="adminLoginForm"
             >
-                Logout
-            </button>
+
+                <div class="form-group">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="adminUsername"
+                        required
+                        placeholder="Enter username"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="adminPassword"
+                        required
+                        placeholder="Enter password"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn primary"
+                >
+                    Login
+                </button>
+
+
+                <p
+                    id="adminLoginMessage"
+                    class="form-message"
+                ></p>
+
+            </form>
 
         </div>
 
 
-        <div class="admin-stats">
+        <!-- DASHBOARD -->
 
-            <div class="admin-stat pending">
-
-                <strong id="pendingCount">
-                    0
-                </strong>
-
-                <span>
-                    Pending
-                </span>
-
-            </div>
+        <div
+            class="admin-dashboard"
+            id="adminDashboard"
+        >
 
 
-            <div class="admin-stat accepted">
-
-                <strong id="acceptedCount">
-                    0
-                </strong>
-
-                <span>
-                    Accepted
-                </span>
-
-            </div>
-
-
-            <div class="admin-stat declined">
-
-                <strong id="declinedCount">
-                    0
-                </strong>
-
-                <span>
-                    Declined
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- REGISTRATIONS -->
-
-        <div class="admin-card">
-
-            <div class="admin-card-heading">
+            <div class="admin-top">
 
                 <div>
 
-                    <h3>
-                        Registration Management
-                    </h3>
+                    <h2>
+                        Admin Dashboard
+                    </h2>
 
                     <p>
-                        Accept or decline applications.
+                        Ado Local Government
                     </p>
 
                 </div>
 
 
-                <select id="adminWardFilter">
-
-                    <option value="all">
-                        All Wards
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div id="registrationList">
-
-                <p class="empty-state">
-                    No registrations yet.
-                </p>
+                <button
+                    class="btn secondary"
+                    id="logoutBtn"
+                >
+                    Logout
+                </button>
 
             </div>
 
-        </div>
+
+            <!-- STATISTICS -->
+
+            <div class="admin-stats">
 
 
-        <!-- EXCO -->
+                <div class="admin-stat">
 
-        <div class="admin-card">
+                    <strong id="pendingCount">
+                        0
+                    </strong>
 
-            <div class="admin-card-heading">
-
-                <div>
-
-                    <h3>
-                        Ward EXCO Selection
-                    </h3>
-
-                    <p>
-                        Select executives from accepted members.
-                    </p>
+                    <span>
+                        Pending
+                    </span>
 
                 </div>
 
 
-                <select id="excoWardSelect">
+                <div class="admin-stat">
 
-                    <option value="">
-                        Select Ward
-                    </option>
+                    <strong id="acceptedCount">
+                        0
+                    </strong>
 
-                </select>
+                    <span>
+                        Accepted
+                    </span>
+
+                </div>
+
+
+                <div class="admin-stat">
+
+                    <strong id="declinedCount">
+                        0
+                    </strong>
+
+                    <span>
+                        Declined
+                    </span>
+
+                </div>
+
 
             </div>
 
 
-            <div id="excoManager">
+            <!-- PENDING -->
 
-                <p class="empty-state">
-                    Select a ward.
-                </p>
+            <div class="admin-card">
+
+                <div class="admin-card-heading">
+
+                    <div>
+
+                        <h3>
+                            Pending Registrations
+                        </h3>
+
+                        <p>
+                            Review new membership applications.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="pendingList">
+
+                    <div class="empty-state">
+                        Loading...
+                    </div>
+
+                </div>
 
             </div>
+
+
+            <!-- ACCEPTED -->
+
+            <div class="admin-card">
+
+                <div class="admin-card-heading">
+
+                    <div>
+
+                        <h3>
+                            Accepted Members
+                        </h3>
+
+                        <p>
+                            All approved members.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="acceptedList">
+
+                    <div class="empty-state">
+                        Loading...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- WARD MEMBERS -->
+
+            <div class="admin-card">
+
+                <div class="admin-card-heading">
+
+                    <div>
+
+                        <h3>
+                            Members By Ward
+                        </h3>
+
+                        <p>
+                            Accepted members organized
+                            by Ward 1–13.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="wardMembers"></div>
+
+            </div>
+
+
+            <!-- EXCO -->
+
+            <div class="admin-card">
+
+                <div class="admin-card-heading">
+
+                    <div>
+
+                        <h3>
+                            EXCO Selection
+                        </h3>
+
+                        <p>
+                            Select accepted members
+                            for executive positions.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div id="excoManager">
+
+                    <div class="empty-state">
+                        Loading members...
+                    </div>
+
+                </div>
+
+
+                <div class="exco-save">
+
+                    <button
+                        class="btn primary"
+                        id="saveExcoBtn"
+                    >
+                        Save EXCO Positions
+                    </button>
+
+                </div>
+
+            </div>
+
 
         </div>
 
     </div>
-
-</section>
 
 </main>
 
 
-<footer>
+<footer class="site-footer">
 
-    <p>
-        © 2026 Ekiti State Women of Influence —
-        Ado Local Government.
-    </p>
+    <div class="container">
+
+        <h3>
+            Ekiti State Women of Influence
+        </h3>
+
+        <p>
+            Ado Local Government
+        </p>
+
+        <p>
+            Ado LGA Coordinator:
+            08061254006
+        </p>
+
+    </div>
 
 </footer>
 
 
 <script src="script.js"></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const loggedIn =
+            sessionStorage.getItem(
+                "ado_admin_logged_in"
+            );
+
+
+        const login =
+            document.getElementById(
+                "adminLogin"
+            );
+
+
+        const dashboard =
+            document.getElementById(
+                "adminDashboard"
+            );
+
+
+        if (
+            loggedIn === "true"
+        ) {
+
+            login.style.display =
+                "none";
+
+            dashboard.classList.add(
+                "active"
+            );
+
+        } else {
+
+            login.style.display =
+                "block";
+
+            dashboard.classList.remove(
+                "active"
+            );
+
+        }
+
+    }
+);
+
+</script>
+
 
 </body>
 
