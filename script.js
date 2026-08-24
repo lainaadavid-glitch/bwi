@@ -23,8 +23,7 @@ const SUPABASE_URL =
 */
 
 const SUPABASE_PUBLISHABLE_KEY =
-    "YOUR_SUPABASE_PUBLISHABLE_KEY";
-
+    "sb_publishable_I92CPrqzXZDb1HHaMfuFRQ_5lCTZ8Fu";
 
 /* =========================================================
    BASIC SUPABASE REQUEST
