@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Register | Ekiti State Women of Influence
+    </title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<header class="header">
+
+    <a href="index.html" class="logo">
+
+        <span>ESWI</span>
+
+        <div>
+
+            <h1>
+                Ekiti State Women of Influence
+            </h1>
+
+            <p>
+                Ado Local Government
+            </p>
+
+        </div>
+
+    </a>
+
+
+    <button
+        class="menu-btn"
+        id="menuBtn"
+    >
+        ☰
+    </button>
+
+
+    <nav id="navMenu">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="wards.html">
+            Wards
+        </a>
+
+        <a href="register.html">
+            Register
+        </a>
+
+        <a href="admin.html">
+            Admin
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="page-hero">
+
+    <p class="section-label">
+        JOIN THE MOVEMENT
+    </p>
+
+    <h2>
+        Membership Registration
+    </h2>
+
+    <p>
+        Complete the form below. Your registration
+        will be reviewed by the administrator.
+    </p>
+
+</section>
+
+
+<section class="section">
+
+<form id="registrationForm">
+
+
+    <div class="form-grid">
+
+
+        <div class="form-group">
+
+            <label for="fullName">
+                Full Name *
+            </label>
+
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Enter your full name"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="phone">
+                Phone Number *
+            </label>
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="08012345678"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="wardSelect">
+                Select Your Ward *
+            </label>
+
+            <select
+                id="wardSelect"
+                required
+            >
+
+                <option value="">
+                    Select your ward
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="occupation">
+                Occupation
+            </label>
+
+            <input
+                type="text"
+                id="occupation"
+                placeholder="Your occupation"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="role">
+                Area of Influence
+            </label>
+
+            <select id="role">
+
+                <option value="">
+                    Select an area
+                </option>
+
+                <option>
+                    Business
+                </option>
+
+                <option>
+                    Education
+                </option>
+
+                <option>
+                    Community Development
+                </option>
+
+                <option>
+                    Healthcare
+                </option>
+
+                <option>
+                    Entrepreneurship
+                </option>
+
+                <option>
+                    Agriculture
+                </option>
+
+                <option>
+                    Politics
+                </option>
+
+                <option>
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label for="message">
+            Tell us about yourself
+        </label>
+
+        <textarea
+            id="message"
+            rows="5"
+            placeholder="Briefly describe your work or community impact"
+        ></textarea>
+
+    </div>
+
+
+    <button
+        type="submit"
+        class="btn primary"
+    >
+        Submit Registration
+    </button>
+
+
+    <p id="formMessage"></p>
+
+</form>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 Ekiti State Women of Influence —
+        Ado Local Government.
+    </p>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
