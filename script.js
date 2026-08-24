@@ -1,23 +1,23 @@
-```javascript
 /* =========================================================
    EKITI STATE WOMEN OF INFLUENCE
    ADO LOCAL GOVERNMENT
-   COMPLETE JAVASCRIPT
+   MULTI-PAGE WEBSITE
 ========================================================= */
 
 
 /* =========================================================
-   ADMIN CREDENTIALS
+   ADMIN LOGIN
 ========================================================= */
 
 /*
-   PROTOTYPE ONLY.
+    DEMO LOGIN
 
-   Username: admin
-   Password: admin123
+    Username: admin
+    Password: admin123
 
-   This must be replaced with real authentication
-   before production deployment.
+    IMPORTANT:
+    This is only a frontend prototype.
+    It is NOT secure authentication.
 */
 
 const ADMIN_USERNAME = "admin";
@@ -63,93 +63,29 @@ const excoPositions = [
 
 
 /* =========================================================
-   ELEMENTS
-========================================================= */
-
-const wardGrid =
-    document.getElementById("wardGrid");
-
-const wardDetails =
-    document.getElementById("wardDetails");
-
-const wardContent =
-    document.getElementById("wardContent");
-
-const closeWard =
-    document.getElementById("closeWard");
-
-const wardSelect =
-    document.getElementById("wardSelect");
-
-const registrationForm =
-    document.getElementById("registrationForm");
-
-const formMessage =
-    document.getElementById("formMessage");
-
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const navMenu =
-    document.getElementById("navMenu");
-
-const adminLogin =
-    document.getElementById("adminLogin");
-
-const adminDashboard =
-    document.getElementById("adminDashboard");
-
-const adminUsername =
-    document.getElementById("adminUsername");
-
-const adminPassword =
-    document.getElementById("adminPassword");
-
-const adminLoginBtn =
-    document.getElementById("adminLoginBtn");
-
-const adminLoginMessage =
-    document.getElementById("adminLoginMessage");
-
-const adminLogoutBtn =
-    document.getElementById("adminLogoutBtn");
-
-const pendingCount =
-    document.getElementById("pendingCount");
-
-const acceptedCount =
-    document.getElementById("acceptedCount");
-
-const declinedCount =
-    document.getElementById("declinedCount");
-
-const adminWardFilter =
-    document.getElementById("adminWardFilter");
-
-const registrationList =
-    document.getElementById("registrationList");
-
-const excoWardSelect =
-    document.getElementById("excoWardSelect");
-
-const excoManager =
-    document.getElementById("excoManager");
-
-const publicMemberCount =
-    document.getElementById("publicMemberCount");
-
-
-/* =========================================================
    STORAGE
 ========================================================= */
 
 function getRegistrations() {
 
-    return JSON.parse(
-        localStorage.getItem(
-            "eswiRegistrations"
-        )
-    ) || [];
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(
+                "eswiRegistrations"
+            )
+        ) || [];
+
+    } catch (error) {
+
+        console.error(
+            "Could not load registrations:",
+            error
+        );
+
+        return [];
+
+    }
 }
 
 
@@ -161,16 +97,30 @@ function saveRegistrations(
         "eswiRegistrations",
         JSON.stringify(registrations)
     );
+
 }
 
 
 function getExcos() {
 
-    return JSON.parse(
-        localStorage.getItem(
-            "eswiExcos"
-        )
-    ) || {};
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(
+                "eswiExcos"
+            )
+        ) || {};
+
+    } catch (error) {
+
+        console.error(
+            "Could not load EXCO data:",
+            error
+        );
+
+        return {};
+
+    }
 }
 
 
@@ -180,494 +130,112 @@ function saveExcos(excos) {
         "eswiExcos",
         JSON.stringify(excos)
     );
+
 }
 
 
 /* =========================================================
-   CREATE WARD CARDS
+   SECURITY HELPER
 ========================================================= */
 
-function createWardCards() {
+function escapeHTML(value) {
 
-    wardGrid.innerHTML = "";
+    if (
+        value === null ||
+        value === undefined
+    ) {
 
-    wards.forEach(ward => {
+        return "";
 
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "ward-card";
-
-        card.innerHTML = `
-
-            <div class="ward-number">
-                ${ward.number}
-            </div>
-
-            <h3>
-                ${ward.name}
-            </h3>
-
-            <p>
-                View ward information →
-            </p>
-
-        `;
-
-        card.addEventListener(
-            "click",
-            () => showWard(ward.number)
-        );
-
-        wardGrid.appendChild(card);
-
-    });
-}
-
-
-/* =========================================================
-   POPULATE PUBLIC WARD SELECT
-========================================================= */
-
-function populateWardSelect() {
-
-    wardSelect.innerHTML = `
-
-        <option value="">
-            Select your ward
-        </option>
-
-    `;
-
-    wards.forEach(ward => {
-
-        const option =
-            document.createElement("option");
-
-        option.value =
-            ward.number;
-
-        option.textContent =
-            `Ward ${ward.number}`;
-
-        wardSelect.appendChild(option);
-
-    });
-}
-
-
-/* =========================================================
-   POPULATE ADMIN FILTERS
-========================================================= */
-
-function populateAdminFilters() {
-
-    adminWardFilter.innerHTML = `
-
-        <option value="all">
-            All Wards
-        </option>
-
-    `;
-
-    excoWardSelect.innerHTML = `
-
-        <option value="">
-            Select Ward
-        </option>
-
-    `;
-
-    wards.forEach(ward => {
-
-        const filterOption =
-            document.createElement("option");
-
-        filterOption.value =
-            ward.number;
-
-        filterOption.textContent =
-            `Ward ${ward.number}`;
-
-        adminWardFilter.appendChild(
-            filterOption
-        );
-
-
-        const excoOption =
-            document.createElement("option");
-
-        excoOption.value =
-            ward.number;
-
-        excoOption.textContent =
-            `Ward ${ward.number}`;
-
-        excoWardSelect.appendChild(
-            excoOption
-        );
-
-    });
-}
-
-
-/* =========================================================
-   SHOW PUBLIC WARD
-========================================================= */
-
-function showWard(wardNumber) {
-
-    const ward =
-        wards.find(
-            item =>
-                item.number === wardNumber
-        );
-
-    if (!ward) return;
-
-
-    const registrations =
-        getRegistrations().filter(
-            item =>
-                Number(item.ward) === wardNumber &&
-                item.status === "accepted"
-        );
-
-
-    const allExcos =
-        getExcos();
-
-    const wardExcos =
-        allExcos[wardNumber] || {};
-
-
-    let excoHTML = "";
-
-
-    excoPositions.forEach(
-        position => {
-
-            const memberId =
-                wardExcos[position];
-
-            const member =
-                registrations.find(
-                    person =>
-                        String(person.id) ===
-                        String(memberId)
-                );
-
-
-            excoHTML += `
-
-                <p>
-                    <strong>
-                        ${position}:
-                    </strong>
-
-                    ${
-                        member
-                            ? escapeHTML(
-                                member.fullName
-                              )
-                            : "Not appointed"
-                    }
-
-                </p>
-
-            `;
-        }
-    );
-
-
-    let membersHTML = "";
-
-
-    if (registrations.length === 0) {
-
-        membersHTML = `
-            <p>
-                No accepted members are currently
-                listed for this ward.
-            </p>
-        `;
-
-    } else {
-
-        membersHTML = `
-
-            <ul class="member-list">
-
-                ${
-                    registrations
-                        .map(
-                            member => `
-                                <li>
-                                    ${escapeHTML(
-                                        member.fullName
-                                    )}
-                                </li>
-                            `
-                        )
-                        .join("")
-                }
-
-            </ul>
-
-        `;
     }
 
 
-    wardContent.innerHTML = `
+    return String(value)
 
-        <p class="section-label">
-            ADO LOCAL GOVERNMENT
-        </p>
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
 
-        <h2>
-            ${ward.name}
-        </h2>
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
 
-        <p>
-            Ekiti State Women of Influence —
-            ${ward.name}.
-        </p>
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
 
-        <br>
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
 
-        <h3>
-            Accepted Women
-        </h3>
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
-        <p>
-            ${registrations.length}
-            accepted member(s).
-        </p>
-
-        ${membersHTML}
-
-        <br>
-
-        <h3>
-            Ward Executive Committee
-        </h3>
-
-        ${excoHTML}
-
-    `;
-
-
-    wardDetails.classList.add(
-        "active"
-    );
-
-
-    wardDetails.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
 }
 
 
 /* =========================================================
-   CLOSE WARD
+   MOBILE NAVIGATION
 ========================================================= */
 
-closeWard.addEventListener(
-    "click",
-    () => {
+function initializeMenu() {
 
-        wardDetails.classList.remove(
-            "active"
+    const menuBtn =
+        document.getElementById(
+            "menuBtn"
         );
+
+    const navMenu =
+        document.getElementById(
+            "navMenu"
+        );
+
+
+    if (
+        !menuBtn ||
+        !navMenu
+    ) {
+
+        return;
 
     }
-);
 
 
-/* =========================================================
-   MOBILE MENU
-========================================================= */
+    menuBtn.addEventListener(
+        "click",
+        () => {
 
-menuBtn.addEventListener(
-    "click",
-    () => {
-
-        navMenu.classList.toggle(
-            "active"
-        );
-
-    }
-);
-
-
-navMenu
-    .querySelectorAll("a")
-    .forEach(link => {
-
-        link.addEventListener(
-            "click",
-            () => {
-
-                navMenu.classList.remove(
-                    "active"
-                );
-
-            }
-        );
-
-    });
-
-
-/* =========================================================
-   PUBLIC REGISTRATION
-========================================================= */
-
-registrationForm.addEventListener(
-    "submit",
-    event => {
-
-        event.preventDefault();
-
-
-        const fullName =
-            document
-                .getElementById("fullName")
-                .value
-                .trim();
-
-
-        const phone =
-            document
-                .getElementById("phone")
-                .value
-                .trim();
-
-
-        const email =
-            document
-                .getElementById("email")
-                .value
-                .trim();
-
-
-        const ward =
-            wardSelect.value;
-
-
-        const occupation =
-            document
-                .getElementById("occupation")
-                .value
-                .trim();
-
-
-        const role =
-            document
-                .getElementById("role")
-                .value;
-
-
-        const message =
-            document
-                .getElementById("message")
-                .value
-                .trim();
-
-
-        if (
-            !fullName ||
-            !phone ||
-            !ward
-        ) {
-
-            showFormMessage(
-                "Please complete your name, phone number and ward.",
-                "error"
+            navMenu.classList.toggle(
+                "active"
             );
 
-            return;
         }
+    );
 
 
-        const registration = {
+    navMenu
+        .querySelectorAll("a")
+        .forEach(link => {
 
-            id: Date.now(),
+            link.addEventListener(
+                "click",
+                () => {
 
-            fullName,
+                    navMenu.classList.remove(
+                        "active"
+                    );
 
-            phone,
+                }
+            );
 
-            email,
+        });
 
-            ward,
-
-            occupation,
-
-            role,
-
-            message,
-
-            status: "pending",
-
-            date:
-                new Date()
-                    .toLocaleString()
-
-        };
-
-
-        const registrations =
-            getRegistrations();
-
-
-        registrations.push(
-            registration
-        );
-
-
-        saveRegistrations(
-            registrations
-        );
-
-
-        showFormMessage(
-            "Registration submitted successfully. Your application is now awaiting admin approval.",
-            "success"
-        );
-
-
-        registrationForm.reset();
-
-
-        updatePublicMemberCount();
-
-        updateAdminStats();
-
-        renderAdminRegistrations();
-
-    }
-);
-
-
-/* =========================================================
-   FORM MESSAGE
-========================================================= */
-
-function showFormMessage(
-    message,
-    type
-) {
-
-    formMessage.textContent =
-        message;
-
-
-    formMessage.style.color =
-        type === "success"
-            ? "#16a34a"
-            : "#dc2626";
 }
 
 
@@ -677,17 +245,341 @@ function showFormMessage(
 
 function updatePublicMemberCount() {
 
+    const counter =
+        document.getElementById(
+            "publicMemberCount"
+        );
+
+
+    if (!counter) {
+
+        return;
+
+    }
+
+
     const accepted =
         getRegistrations()
             .filter(
-                item =>
-                    item.status === "accepted"
-            )
-            .length;
+                member =>
+                    member.status ===
+                    "accepted"
+            );
 
 
-    publicMemberCount.textContent =
-        accepted;
+    counter.textContent =
+        accepted.length;
+
+}
+
+
+/* =========================================================
+   CREATE WARD CARDS
+========================================================= */
+
+function createWardCards() {
+
+    const wardGrid =
+        document.getElementById(
+            "wardGrid"
+        );
+
+
+    if (!wardGrid) {
+
+        return;
+
+    }
+
+
+    wardGrid.innerHTML = "";
+
+
+    wards.forEach(
+        ward => {
+
+            const card =
+                document.createElement(
+                    "a"
+                );
+
+
+            card.className =
+                "ward-card";
+
+
+            card.href =
+                `ward.html?ward=${ward.number}`;
+
+
+            card.innerHTML = `
+
+                <div class="ward-number">
+                    ${ward.number}
+                </div>
+
+                <h3>
+                    ${ward.name}
+                </h3>
+
+                <p>
+                    View ward →
+                </p>
+
+            `;
+
+
+            wardGrid.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   POPULATE REGISTRATION WARD SELECT
+========================================================= */
+
+function populateWardSelect() {
+
+    const select =
+        document.getElementById(
+            "wardSelect"
+        );
+
+
+    if (!select) {
+
+        return;
+
+    }
+
+
+    select.innerHTML = `
+
+        <option value="">
+            Select your ward
+        </option>
+
+    `;
+
+
+    wards.forEach(
+        ward => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                ward.number;
+
+
+            option.textContent =
+                ward.name;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   REGISTRATION FORM
+========================================================= */
+
+function initializeRegistration() {
+
+    const form =
+        document.getElementById(
+            "registrationForm"
+        );
+
+
+    if (!form) {
+
+        return;
+
+    }
+
+
+    form.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+
+            const fullName =
+                document
+                    .getElementById(
+                        "fullName"
+                    )
+                    .value
+                    .trim();
+
+
+            const phone =
+                document
+                    .getElementById(
+                        "phone"
+                    )
+                    .value
+                    .trim();
+
+
+            const ward =
+                document
+                    .getElementById(
+                        "wardSelect"
+                    )
+                    .value;
+
+
+            const occupation =
+                document
+                    .getElementById(
+                        "occupation"
+                    )
+                    .value
+                    .trim();
+
+
+            const role =
+                document
+                    .getElementById(
+                        "role"
+                    )
+                    .value;
+
+
+            const message =
+                document
+                    .getElementById(
+                        "message"
+                    )
+                    .value
+                    .trim();
+
+
+            const emailElement =
+                document.getElementById(
+                    "email"
+                );
+
+
+            const email =
+                emailElement
+                    ? emailElement.value.trim()
+                    : "";
+
+
+            const formMessage =
+                document.getElementById(
+                    "formMessage"
+                );
+
+
+            if (
+                !fullName ||
+                !phone ||
+                !ward
+            ) {
+
+                if (formMessage) {
+
+                    formMessage.textContent =
+                        "Please complete your full name, phone number and ward.";
+
+                    formMessage.style.color =
+                        "#dc2626";
+
+                }
+
+                return;
+
+            }
+
+
+            const registrations =
+                getRegistrations();
+
+
+            const registration = {
+
+                id:
+                    Date.now(),
+
+                fullName:
+                    fullName,
+
+                phone:
+                    phone,
+
+                email:
+                    email,
+
+                ward:
+                    ward,
+
+                occupation:
+                    occupation,
+
+                role:
+                    role,
+
+                message:
+                    message,
+
+                status:
+                    "pending",
+
+                date:
+                    new Date()
+                        .toLocaleString(),
+
+                reviewedAt:
+                    null
+
+            };
+
+
+            registrations.push(
+                registration
+            );
+
+
+            saveRegistrations(
+                registrations
+            );
+
+
+            if (formMessage) {
+
+                formMessage.textContent =
+                    "Registration submitted successfully. Your application is awaiting admin approval.";
+
+                formMessage.style.color =
+                    "#16a34a";
+
+            }
+
+
+            form.reset();
+
+        }
+    );
+
 }
 
 
@@ -695,36 +587,90 @@ function updatePublicMemberCount() {
    ADMIN LOGIN
 ========================================================= */
 
-adminLoginBtn.addEventListener(
-    "click",
-    loginAdmin
-);
+function initializeAdminLogin() {
+
+    const loginButton =
+        document.getElementById(
+            "adminLoginBtn"
+        );
 
 
-adminPassword.addEventListener(
-    "keydown",
-    event => {
+    if (!loginButton) {
 
-        if (event.key === "Enter") {
-            loginAdmin();
-        }
+        return;
 
     }
-);
 
+
+    loginButton.addEventListener(
+        "click",
+        loginAdmin
+    );
+
+
+    const passwordInput =
+        document.getElementById(
+            "adminPassword"
+        );
+
+
+    if (passwordInput) {
+
+        passwordInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    loginAdmin();
+
+                }
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOGIN ADMIN
+========================================================= */
 
 function loginAdmin() {
 
     const username =
-        adminUsername.value.trim();
+        document
+            .getElementById(
+                "adminUsername"
+            )
+            .value
+            .trim();
+
 
     const password =
-        adminPassword.value;
+        document
+            .getElementById(
+                "adminPassword"
+            )
+            .value;
+
+
+    const message =
+        document.getElementById(
+            "adminLoginMessage"
+        );
 
 
     if (
-        username === ADMIN_USERNAME &&
-        password === ADMIN_PASSWORD
+        username ===
+        ADMIN_USERNAME &&
+        password ===
+        ADMIN_PASSWORD
     ) {
 
         sessionStorage.setItem(
@@ -733,71 +679,73 @@ function loginAdmin() {
         );
 
 
-        adminLogin.classList.add(
-            "hidden"
-        );
-
-        adminLogin.style.display =
-            "none";
+        showAdminDashboard();
 
 
-        adminDashboard.classList.add(
-            "active"
-        );
+        if (message) {
 
+            message.textContent =
+                "";
 
-        adminLoginMessage.textContent =
-            "";
-
-
-        loadAdminDashboard();
+        }
 
     } else {
 
-        adminLoginMessage.textContent =
-            "Invalid administrator username or password.";
+        if (message) {
 
-        adminLoginMessage.style.color =
-            "#dc2626";
+            message.textContent =
+                "Invalid administrator username or password.";
+
+            message.style.color =
+                "#dc2626";
+
+        }
+
     }
+
 }
 
 
 /* =========================================================
-   ADMIN LOGOUT
+   SHOW ADMIN DASHBOARD
 ========================================================= */
 
-adminLogoutBtn.addEventListener(
-    "click",
-    logoutAdmin
-);
+function showAdminDashboard() {
+
+    const login =
+        document.getElementById(
+            "adminLogin"
+        );
 
 
-function logoutAdmin() {
-
-    sessionStorage.removeItem(
-        "eswiAdminLoggedIn"
-    );
-
-
-    adminDashboard.classList.remove(
-        "active"
-    );
+    const dashboard =
+        document.getElementById(
+            "adminDashboard"
+        );
 
 
-    adminLogin.style.display =
-        "block";
+    if (login) {
+
+        login.style.display =
+            "none";
+
+    }
 
 
-    adminUsername.value = "";
-    adminPassword.value = "";
+    if (dashboard) {
+
+        dashboard.classList.add(
+            "active"
+        );
+
+        dashboard.style.display =
+            "block";
+
+    }
 
 
-    document
-        .getElementById("admin")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+    loadAdminDashboard();
+
 }
 
 
@@ -813,18 +761,188 @@ function checkAdminSession() {
         );
 
 
-    if (loggedIn === "true") {
+    if (
+        loggedIn ===
+        "true"
+    ) {
 
-        adminLogin.style.display =
-            "none";
-
-        adminDashboard.classList.add(
-            "active"
-        );
-
-        loadAdminDashboard();
+        showAdminDashboard();
 
     }
+
+}
+
+
+/* =========================================================
+   ADMIN LOGOUT
+========================================================= */
+
+function initializeAdminLogout() {
+
+    const logoutButton =
+        document.getElementById(
+            "adminLogoutBtn"
+        );
+
+
+    if (!logoutButton) {
+
+        return;
+
+    }
+
+
+    logoutButton.addEventListener(
+        "click",
+        () => {
+
+            sessionStorage.removeItem(
+                "eswiAdminLoggedIn"
+            );
+
+
+            const dashboard =
+                document.getElementById(
+                    "adminDashboard"
+                );
+
+
+            const login =
+                document.getElementById(
+                    "adminLogin"
+                );
+
+
+            if (dashboard) {
+
+                dashboard.classList.remove(
+                    "active"
+                );
+
+                dashboard.style.display =
+                    "none";
+
+            }
+
+
+            if (login) {
+
+                login.style.display =
+                    "block";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ADMIN WARD FILTERS
+========================================================= */
+
+function populateAdminFilters() {
+
+    const wardFilter =
+        document.getElementById(
+            "adminWardFilter"
+        );
+
+
+    const excoWard =
+        document.getElementById(
+            "excoWardSelect"
+        );
+
+
+    if (wardFilter) {
+
+        wardFilter.innerHTML = `
+
+            <option value="all">
+                All Wards
+            </option>
+
+        `;
+
+
+        wards.forEach(
+            ward => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    ward.number;
+
+
+                option.textContent =
+                    ward.name;
+
+
+                wardFilter.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        wardFilter.addEventListener(
+            "change",
+            renderAdminRegistrations
+        );
+
+    }
+
+
+    if (excoWard) {
+
+        excoWard.innerHTML = `
+
+            <option value="">
+                Select Ward
+            </option>
+
+        `;
+
+
+        wards.forEach(
+            ward => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    ward.number;
+
+
+                option.textContent =
+                    ward.name;
+
+
+                excoWard.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        excoWard.addEventListener(
+            "change",
+            renderExcoManager
+        );
+
+    }
+
 }
 
 
@@ -855,35 +973,72 @@ function updateAdminStats() {
 
     const pending =
         registrations.filter(
-            item =>
-                item.status === "pending"
+            member =>
+                member.status ===
+                "pending"
         ).length;
 
 
     const accepted =
         registrations.filter(
-            item =>
-                item.status === "accepted"
+            member =>
+                member.status ===
+                "accepted"
         ).length;
 
 
     const declined =
         registrations.filter(
-            item =>
-                item.status === "declined"
+            member =>
+                member.status ===
+                "declined"
         ).length;
 
 
-    pendingCount.textContent =
-        pending;
+    const pendingElement =
+        document.getElementById(
+            "pendingCount"
+        );
 
-    acceptedCount.textContent =
-        accepted;
 
-    declinedCount.textContent =
-        declined;
+    const acceptedElement =
+        document.getElementById(
+            "acceptedCount"
+        );
+
+
+    const declinedElement =
+        document.getElementById(
+            "declinedCount"
+        );
+
+
+    if (pendingElement) {
+
+        pendingElement.textContent =
+            pending;
+
+    }
+
+
+    if (acceptedElement) {
+
+        acceptedElement.textContent =
+            accepted;
+
+    }
+
+
+    if (declinedElement) {
+
+        declinedElement.textContent =
+            declined;
+
+    }
+
 
     updatePublicMemberCount();
+
 }
 
 
@@ -893,38 +1048,60 @@ function updateAdminStats() {
 
 function renderAdminRegistrations() {
 
-    if (
-        !registrationList
-    ) return;
+    const container =
+        document.getElementById(
+            "registrationList"
+        );
 
 
-    const registrations =
-        getRegistrations();
+    if (!container) {
 
+        return;
 
-    const filter =
-        adminWardFilter.value ||
-        "all";
-
-
-    let filtered =
-        registrations;
-
-
-    if (filter !== "all") {
-
-        filtered =
-            registrations.filter(
-                item =>
-                    String(item.ward) ===
-                    String(filter)
-            );
     }
 
 
-    if (filtered.length === 0) {
+    const filter =
+        document.getElementById(
+            "adminWardFilter"
+        );
 
-        registrationList.innerHTML = `
+
+    const selectedWard =
+        filter
+            ? filter.value
+            : "all";
+
+
+    let registrations =
+        getRegistrations();
+
+
+    if (
+        selectedWard !==
+        "all"
+    ) {
+
+        registrations =
+            registrations.filter(
+                member =>
+                    String(
+                        member.ward
+                    ) ===
+                    String(
+                        selectedWard
+                    )
+            );
+
+    }
+
+
+    if (
+        registrations.length ===
+        0
+    ) {
+
+        container.innerHTML = `
 
             <p class="empty-state">
                 No registrations found.
@@ -933,13 +1110,14 @@ function renderAdminRegistrations() {
         `;
 
         return;
+
     }
 
 
-    registrationList.innerHTML = "";
+    container.innerHTML = "";
 
 
-    filtered
+    registrations
         .slice()
         .reverse()
         .forEach(
@@ -982,6 +1160,7 @@ function renderAdminRegistrations() {
 
                         </div>
 
+
                         <strong>
                             Ward ${escapeHTML(
                                 String(
@@ -1001,45 +1180,54 @@ function renderAdminRegistrations() {
                             <strong>
                                 Phone:
                             </strong>
+
                             ${escapeHTML(
                                 registration.phone
                             )}
                         </div>
 
+
                         <div>
                             <strong>
                                 Email:
                             </strong>
+
                             ${escapeHTML(
                                 registration.email ||
                                 "Not provided"
                             )}
                         </div>
 
+
                         <div>
                             <strong>
                                 Occupation:
                             </strong>
+
                             ${escapeHTML(
                                 registration.occupation ||
                                 "Not provided"
                             )}
                         </div>
 
+
                         <div>
                             <strong>
                                 Area:
                             </strong>
+
                             ${escapeHTML(
                                 registration.role ||
                                 "Not provided"
                             )}
                         </div>
 
+
                         <div>
                             <strong>
                                 Submitted:
                             </strong>
+
                             ${escapeHTML(
                                 registration.date
                             )}
@@ -1050,20 +1238,26 @@ function renderAdminRegistrations() {
 
                     ${
                         registration.message
-                            ? `
-                                <div
-                                    class="registration-message"
-                                >
-                                    <strong>
-                                        About:
-                                    </strong>
+                        ?
+                        `
 
-                                    ${escapeHTML(
-                                        registration.message
-                                    )}
-                                </div>
-                              `
-                            : ""
+                            <div
+                                class="registration-message"
+                            >
+
+                                <strong>
+                                    About:
+                                </strong>
+
+                                ${escapeHTML(
+                                    registration.message
+                                )}
+
+                            </div>
+
+                        `
+                        :
+                        ""
                     }
 
 
@@ -1072,31 +1266,42 @@ function renderAdminRegistrations() {
                     >
 
                         ${
-                            status === "pending"
-                                ? `
+                            status ===
+                            "pending"
 
-                                    <button
-                                        class="small-btn accept-btn"
-                                        onclick="acceptRegistration(${registration.id})"
-                                    >
-                                        ✓ Accept
-                                    </button>
+                            ?
 
-                                    <button
-                                        class="small-btn decline-btn"
-                                        onclick="declineRegistration(${registration.id})"
-                                    >
-                                        ✕ Decline
-                                    </button>
+                            `
 
-                                  `
-                                : ""
+                                <button
+                                    class="small-btn accept-btn"
+                                    data-action="accept"
+                                    data-id="${registration.id}"
+                                >
+                                    ✓ Accept
+                                </button>
+
+
+                                <button
+                                    class="small-btn decline-btn"
+                                    data-action="decline"
+                                    data-id="${registration.id}"
+                                >
+                                    ✕ Decline
+                                </button>
+
+                            `
+
+                            :
+
+                            ""
                         }
 
 
                         <button
                             class="small-btn delete-btn"
-                            onclick="deleteRegistration(${registration.id})"
+                            data-action="delete"
+                            data-id="${registration.id}"
                         >
                             Delete
                         </button>
@@ -1106,12 +1311,76 @@ function renderAdminRegistrations() {
                 `;
 
 
-                registrationList.appendChild(
+                container.appendChild(
                     item
                 );
 
             }
         );
+
+
+    container
+        .querySelectorAll(
+            "button[data-action]"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        const action =
+                            button.dataset.action;
+
+
+                        const id =
+                            Number(
+                                button.dataset.id
+                            );
+
+
+                        if (
+                            action ===
+                            "accept"
+                        ) {
+
+                            acceptRegistration(
+                                id
+                            );
+
+                        }
+
+
+                        if (
+                            action ===
+                            "decline"
+                        ) {
+
+                            declineRegistration(
+                                id
+                            );
+
+                        }
+
+
+                        if (
+                            action ===
+                            "delete"
+                        ) {
+
+                            deleteRegistration(
+                                id
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
 }
 
 
@@ -1119,7 +1388,9 @@ function renderAdminRegistrations() {
    ACCEPT REGISTRATION
 ========================================================= */
 
-function acceptRegistration(id) {
+function acceptRegistration(
+    id
+) {
 
     const registrations =
         getRegistrations();
@@ -1127,13 +1398,17 @@ function acceptRegistration(id) {
 
     const person =
         registrations.find(
-            item =>
-                Number(item.id) ===
+            member =>
+                Number(member.id) ===
                 Number(id)
         );
 
 
-    if (!person) return;
+    if (!person) {
+
+        return;
+
+    }
 
 
     person.status =
@@ -1141,7 +1416,8 @@ function acceptRegistration(id) {
 
 
     person.reviewedAt =
-        new Date().toLocaleString();
+        new Date()
+            .toLocaleString();
 
 
     saveRegistrations(
@@ -1157,6 +1433,7 @@ function acceptRegistration(id) {
     alert(
         `${person.fullName} has been accepted.`
     );
+
 }
 
 
@@ -1164,7 +1441,9 @@ function acceptRegistration(id) {
    DECLINE REGISTRATION
 ========================================================= */
 
-function declineRegistration(id) {
+function declineRegistration(
+    id
+) {
 
     const registrations =
         getRegistrations();
@@ -1172,22 +1451,30 @@ function declineRegistration(id) {
 
     const person =
         registrations.find(
-            item =>
-                Number(item.id) ===
+            member =>
+                Number(member.id) ===
                 Number(id)
         );
 
 
-    if (!person) return;
+    if (!person) {
+
+        return;
+
+    }
 
 
     const confirmed =
         confirm(
-            `Decline registration for ${person.fullName}?`
+            `Decline ${person.fullName}'s registration?`
         );
 
 
-    if (!confirmed) return;
+    if (!confirmed) {
+
+        return;
+
+    }
 
 
     person.status =
@@ -1195,7 +1482,8 @@ function declineRegistration(id) {
 
 
     person.reviewedAt =
-        new Date().toLocaleString();
+        new Date()
+            .toLocaleString();
 
 
     saveRegistrations(
@@ -1204,7 +1492,7 @@ function declineRegistration(id) {
 
 
     removePersonFromExco(
-        person.id
+        id
     );
 
 
@@ -1212,10 +1500,13 @@ function declineRegistration(id) {
 
     renderAdminRegistrations();
 
+    renderExcoManager();
+
 
     alert(
         `${person.fullName}'s registration has been declined.`
     );
+
 }
 
 
@@ -1223,7 +1514,9 @@ function declineRegistration(id) {
    DELETE REGISTRATION
 ========================================================= */
 
-function deleteRegistration(id) {
+function deleteRegistration(
+    id
+) {
 
     const registrations =
         getRegistrations();
@@ -1231,13 +1524,17 @@ function deleteRegistration(id) {
 
     const person =
         registrations.find(
-            item =>
-                Number(item.id) ===
+            member =>
+                Number(member.id) ===
                 Number(id)
         );
 
 
-    if (!person) return;
+    if (!person) {
+
+        return;
+
+    }
 
 
     const confirmed =
@@ -1246,13 +1543,17 @@ function deleteRegistration(id) {
         );
 
 
-    if (!confirmed) return;
+    if (!confirmed) {
+
+        return;
+
+    }
 
 
     const remaining =
         registrations.filter(
-            item =>
-                Number(item.id) !==
+            member =>
+                Number(member.id) !==
                 Number(id)
         );
 
@@ -1292,68 +1593,90 @@ function removePersonFromExco(
         false;
 
 
-    Object.keys(excos)
-        .forEach(
-            wardNumber => {
+    Object.keys(
+        excos
+    ).forEach(
+        wardNumber => {
 
-                Object.keys(
-                    excos[wardNumber]
-                )
-                .forEach(
-                    position => {
+            Object.keys(
+                excos[wardNumber]
+            ).forEach(
+                position => {
 
-                        if (
-                            String(
-                                excos[
-                                    wardNumber
-                                ][position]
-                            ) ===
-                            String(personId)
-                        ) {
-
-                            delete excos[
+                    if (
+                        String(
+                            excos[
                                 wardNumber
-                            ][position];
+                            ][position]
+                        ) ===
+                        String(
+                            personId
+                        )
+                    ) {
 
-                            changed = true;
-                        }
+                        delete excos[
+                            wardNumber
+                        ][position];
+
+
+                        changed =
+                            true;
 
                     }
-                );
 
-            }
-        );
+                }
+            );
+
+        }
+    );
 
 
     if (changed) {
-        saveExcos(excos);
+
+        saveExcos(
+            excos
+        );
+
     }
+
 }
 
 
 /* =========================================================
-   EXCO WARD SELECT
-========================================================= */
-
-excoWardSelect.addEventListener(
-    "change",
-    renderExcoManager
-);
-
-
-/* =========================================================
-   RENDER EXCO MANAGER
+   EXCO MANAGER
 ========================================================= */
 
 function renderExcoManager() {
 
+    const manager =
+        document.getElementById(
+            "excoManager"
+        );
+
+
+    const wardSelect =
+        document.getElementById(
+            "excoWardSelect"
+        );
+
+
+    if (
+        !manager ||
+        !wardSelect
+    ) {
+
+        return;
+
+    }
+
+
     const wardNumber =
-        excoWardSelect.value;
+        wardSelect.value;
 
 
     if (!wardNumber) {
 
-        excoManager.innerHTML = `
+        manager.innerHTML = `
 
             <p class="empty-state">
                 Select a ward to manage its EXCO.
@@ -1362,33 +1685,36 @@ function renderExcoManager() {
         `;
 
         return;
+
     }
 
 
     const acceptedMembers =
         getRegistrations().filter(
-            item =>
-                Number(item.ward) ===
+            member =>
+                Number(member.ward) ===
                 Number(wardNumber) &&
-                item.status ===
+                member.status ===
                 "accepted"
         );
 
 
     if (
-        acceptedMembers.length === 0
+        acceptedMembers.length ===
+        0
     ) {
 
-        excoManager.innerHTML = `
+        manager.innerHTML = `
 
             <p class="empty-state">
                 There are no accepted members
-                in Ward ${wardNumber} yet.
+                in Ward ${wardNumber}.
             </p>
 
         `;
 
         return;
+
     }
 
 
@@ -1396,14 +1722,15 @@ function renderExcoManager() {
         getExcos();
 
 
-    const wardExcos =
-        excos[wardNumber] || {};
+    const currentExco =
+        excos[wardNumber] ||
+        {};
 
 
     let html = `
 
-        <p>
-            Select an accepted member for each
+        <p class="exco-description">
+            Choose an accepted member for each
             executive position.
         </p>
 
@@ -1413,8 +1740,10 @@ function renderExcoManager() {
     excoPositions.forEach(
         position => {
 
-            const currentId =
-                wardExcos[position] || "";
+            const currentMember =
+                currentExco[
+                    position
+                ] || "";
 
 
             html += `
@@ -1427,10 +1756,10 @@ function renderExcoManager() {
 
 
                     <select
+                        class="exco-select"
                         data-position="${escapeHTML(
                             position
                         )}"
-                        class="exco-select"
                     >
 
                         <option value="">
@@ -1450,10 +1779,12 @@ function renderExcoManager() {
                                                     member.id
                                                 ) ===
                                                 String(
-                                                    currentId
+                                                    currentMember
                                                 )
-                                                    ? "selected"
-                                                    : ""
+                                                ?
+                                                "selected"
+                                                :
+                                                ""
                                             }
                                         >
                                             ${escapeHTML(
@@ -1489,32 +1820,39 @@ function renderExcoManager() {
     `;
 
 
-    excoManager.innerHTML =
+    manager.innerHTML =
         html;
 
 
-    document
-        .getElementById(
+    const saveButton =
+        document.getElementById(
             "saveExcoBtn"
-        )
-        .addEventListener(
-            "click",
-            () => saveWardExco(
-                wardNumber
-            )
         );
+
+
+    saveButton.addEventListener(
+        "click",
+        () => {
+
+            saveWardExco(
+                wardNumber
+            );
+
+        }
+    );
+
 }
 
 
 /* =========================================================
-   SAVE WARD EXCO
+   SAVE EXCO
 ========================================================= */
 
 function saveWardExco(
     wardNumber
 ) {
 
-    const selections =
+    const selects =
         document.querySelectorAll(
             ".exco-select"
         );
@@ -1524,14 +1862,17 @@ function saveWardExco(
         getExcos();
 
 
-    if (!excos[wardNumber]) {
+    if (
+        !excos[wardNumber]
+    ) {
 
-        excos[wardNumber] = {};
+        excos[wardNumber] =
+            {};
 
     }
 
 
-    selections.forEach(
+    selects.forEach(
         select => {
 
             const position =
@@ -1571,65 +1912,328 @@ function saveWardExco(
     );
 
 
-    showWard(
-        Number(wardNumber)
-    );
+    renderExcoManager();
+
 }
 
 
 /* =========================================================
-   ADMIN FILTER
+   INDIVIDUAL WARD PAGE
 ========================================================= */
 
-adminWardFilter.addEventListener(
-    "change",
-    renderAdminRegistrations
-);
+function initializeIndividualWard() {
+
+    const title =
+        document.getElementById(
+            "wardTitle"
+        );
 
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
+    if (!title) {
 
-function escapeHTML(value) {
-
-    if (value === null ||
-        value === undefined) {
-
-        return "";
+        return;
 
     }
 
 
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const wardNumber =
+        Number(
+            params.get(
+                "ward"
+            )
+        );
+
+
+    const ward =
+        wards.find(
+            item =>
+                item.number ===
+                wardNumber
+        );
+
+
+    if (!ward) {
+
+        title.textContent =
+            "Ward Not Found";
+
+
+        const description =
+            document.getElementById(
+                "wardDescription"
+            );
+
+
+        if (description) {
+
+            description.textContent =
+                "The requested ward does not exist.";
+
+        }
+
+
+        return;
+
+    }
+
+
+    title.textContent =
+        ward.name;
+
+
+    const description =
+        document.getElementById(
+            "wardDescription"
+        );
+
+
+    if (description) {
+
+        description.textContent =
+            `Ekiti State Women of Influence — ${ward.name}`;
+
+    }
+
+
+    loadWardMembers(
+        wardNumber
+    );
+
+
+    loadWardExco(
+        wardNumber
+    );
+
 }
 
 
 /* =========================================================
-   INITIALIZE
+   LOAD WARD MEMBERS
 ========================================================= */
 
-function initializeWebsite() {
+function loadWardMembers(
+    wardNumber
+) {
 
-    createWardCards();
+    const container =
+        document.getElementById(
+            "wardMembers"
+        );
 
-    populateWardSelect();
 
-    populateAdminFilters();
+    if (!container) {
 
-    updatePublicMemberCount();
+        return;
 
-    updateAdminStats();
+    }
 
-    checkAdminSession();
+
+    const members =
+        getRegistrations().filter(
+            member =>
+                Number(member.ward) ===
+                Number(wardNumber) &&
+                member.status ===
+                "accepted"
+        );
+
+
+    if (
+        members.length ===
+        0
+    ) {
+
+        container.innerHTML = `
+
+            <p class="empty-state">
+                No accepted members yet.
+            </p>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+        <div class="member-list">
+
+            ${
+                members
+                    .map(
+                        member => `
+
+                            <div class="member-row">
+
+                                ${escapeHTML(
+                                    member.fullName
+                                )}
+
+                            </div>
+
+                        `
+                    )
+                    .join("")
+            }
+
+        </div>
+
+    `;
 
 }
 
 
-initializeWebsite();
-```
+/* =========================================================
+   LOAD PUBLIC EXCO
+========================================================= */
+
+function loadWardExco(
+    wardNumber
+) {
+
+    const container =
+        document.getElementById(
+            "wardExco"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    const members =
+        getRegistrations().filter(
+            member =>
+                Number(member.ward) ===
+                Number(wardNumber) &&
+                member.status ===
+                "accepted"
+        );
+
+
+    const excos =
+        getExcos();
+
+
+    const wardExco =
+        excos[wardNumber] ||
+        {};
+
+
+    let html = "";
+
+
+    excoPositions.forEach(
+        position => {
+
+            const memberId =
+                wardExco[
+                    position
+                ];
+
+
+            const member =
+                members.find(
+                    person =>
+                        String(
+                            person.id
+                        ) ===
+                        String(
+                            memberId
+                        )
+                );
+
+
+            html += `
+
+                <div
+                    class="exco-public-row"
+                >
+
+                    <strong>
+                        ${position}
+                    </strong>
+
+                    <span>
+                        ${
+                            member
+                            ?
+                            escapeHTML(
+                                member.fullName
+                            )
+                            :
+                            "Not appointed"
+                        }
+                    </span>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+/* =========================================================
+   INITIALIZE EVERYTHING
+========================================================= */
+
+function initializeWebsite() {
+
+    initializeMenu();
+
+
+    updatePublicMemberCount();
+
+
+    createWardCards();
+
+
+    populateWardSelect();
+
+
+    initializeRegistration();
+
+
+    initializeAdminLogin();
+
+
+    initializeAdminLogout();
+
+
+    populateAdminFilters();
+
+
+    checkAdminSession();
+
+
+    initializeIndividualWard();
+
+}
+
+
+/* =========================================================
+   START WEBSITE
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeWebsite
+);
