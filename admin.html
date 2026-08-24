@@ -31,9 +31,9 @@
         </a>
 
         <button
+            type="button"
             class="menu-btn"
             id="menuBtn"
-            type="button"
         >
             ☰
         </button>
@@ -59,7 +59,9 @@
 
     <div class="container">
 
-        <!-- LOGIN -->
+        <!-- =================================================
+             ADMIN LOGIN
+        ================================================== -->
 
         <section
             id="adminLogin"
@@ -107,7 +109,7 @@
                         type="password"
                         id="adminPassword"
                         name="adminPassword"
-                        placeholder="Enter password"
+                        placeholder="Enter admin password"
                         autocomplete="current-password"
                         required
                     >
@@ -128,6 +130,7 @@
                     id="adminLoginMessage"
                     class="form-message"
                     role="alert"
+                    aria-live="polite"
                 ></div>
 
             </form>
@@ -135,16 +138,27 @@
         </section>
 
 
-        <!-- DASHBOARD -->
+        <!-- =================================================
+             ADMIN DASHBOARD
+        ================================================== -->
 
         <section
             id="adminDashboard"
-            style="display:none;"
+            style="display: none;"
         >
 
-            <div class="section-title">
+            <div class="admin-header">
 
-                <h2>Admin Dashboard</h2>
+                <div>
+
+                    <h2>
+                        Admin Dashboard
+                    </h2>
+
+                    <p id="adminUserEmail"></p>
+
+                </div>
+
 
                 <button
                     type="button"
@@ -157,7 +171,9 @@
             </div>
 
 
-            <!-- STATISTICS -->
+            <!-- =================================================
+                 STATISTICS
+            ================================================== -->
 
             <div class="dashboard-stats">
 
@@ -202,22 +218,43 @@
             </div>
 
 
-            <!-- PENDING -->
+            <!-- =================================================
+                 PENDING REGISTRATIONS
+            ================================================== -->
 
             <section class="admin-section">
 
-                <h2>
-                    Pending Registrations
-                </h2>
+                <div class="admin-section-header">
+
+                    <h2>
+                        Pending Registrations
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="btn"
+                        id="refreshPendingBtn"
+                    >
+                        Refresh
+                    </button>
+
+                </div>
+
 
                 <div id="pendingList">
-                    Loading...
+
+                    <div class="loading">
+                        Loading registrations...
+                    </div>
+
                 </div>
 
             </section>
 
 
-            <!-- ACCEPTED -->
+            <!-- =================================================
+                 ACCEPTED MEMBERS
+            ================================================== -->
 
             <section class="admin-section">
 
@@ -225,14 +262,21 @@
                     Accepted Members
                 </h2>
 
+
                 <div id="acceptedList">
-                    Loading...
+
+                    <div class="loading">
+                        Loading members...
+                    </div>
+
                 </div>
 
             </section>
 
 
-            <!-- WARDS -->
+            <!-- =================================================
+                 MEMBERS BY WARD
+            ================================================== -->
 
             <section class="admin-section">
 
@@ -240,14 +284,21 @@
                     Members by Ward
                 </h2>
 
+
                 <div id="wardMembers">
-                    Loading...
+
+                    <div class="loading">
+                        Loading wards...
+                    </div>
+
                 </div>
 
             </section>
 
 
-            <!-- EXCO -->
+            <!-- =================================================
+                 EXCO
+            ================================================== -->
 
             <section class="admin-section">
 
@@ -256,12 +307,17 @@
                 </h2>
 
                 <p>
-                    The administrator can assign EXCO
-                    positions to accepted members.
+                    Only the administrator can assign
+                    EXCO positions.
                 </p>
 
+
                 <div id="excoManager">
-                    Loading...
+
+                    <div class="loading">
+                        Loading EXCO manager...
+                    </div>
+
                 </div>
 
 
@@ -272,6 +328,13 @@
                 >
                     Save EXCO Positions
                 </button>
+
+
+                <div
+                    id="excoMessage"
+                    class="form-message"
+                    role="alert"
+                ></div>
 
             </section>
 
@@ -287,7 +350,10 @@
     <div class="container">
 
         <p>
-            Ekiti State Women of Influence —
+            Ekiti State Women of Influence
+        </p>
+
+        <p>
             Ado Local Government
         </p>
 
