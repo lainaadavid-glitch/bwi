@@ -1,21 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Admin Panel | Ekiti State Women of Influence</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="description"
+        content="Admin Panel - Ekiti State Women of Influence, Ado Local Government"
+    >
+
+    <title>
+        Admin Panel | Ekiti State Women of Influence
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
+
 <body>
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
 
 <header class="site-header">
 
     <div class="header-container">
 
-        <a href="index.html" class="logo-area">
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="logo-area"
+        >
 
             <img
                 src="logo.jpeg"
@@ -24,30 +53,62 @@
             >
 
             <div class="logo-text">
-                <h1>Ekiti State Women of Influence</h1>
-                <p>Ado Local Government</p>
+
+                <h1>
+                    Ekiti State Women of Influence
+                </h1>
+
+                <p>
+                    Ado Local Government
+                </p>
+
             </div>
 
         </a>
+
+
+        <!-- MOBILE MENU -->
 
         <button
             type="button"
             class="menu-btn"
             id="menuBtn"
+            aria-label="Open navigation menu"
         >
             ☰
         </button>
+
+
+        <!-- NAVIGATION -->
 
         <nav
             class="main-nav"
             id="navMenu"
         >
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="wards.html">Wards</a>
-            <a href="register.html">Register</a>
-            <a href="contact.html">Contact</a>
-            <a href="admin.html" class="active">Admin</a>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="about.html">
+                About
+            </a>
+
+            <a href="wards.html">
+                Wards
+            </a>
+
+            <a href="register.html">
+                Register
+            </a>
+
+            <a
+                href="admin.html"
+                class="active"
+            >
+                Admin
+            </a>
+
         </nav>
 
     </div>
@@ -55,9 +116,15 @@
 </header>
 
 
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
 <main class="section">
 
     <div class="container">
+
 
         <!-- =================================================
              ADMIN LOGIN
@@ -70,7 +137,9 @@
 
             <div class="section-title">
 
-                <h2>Admin Login</h2>
+                <h2>
+                    Admin Login
+                </h2>
 
                 <p>
                     Authorized administrators only.
@@ -79,7 +148,12 @@
             </div>
 
 
-            <form id="adminLoginForm">
+            <form
+                id="adminLoginForm"
+            >
+
+
+                <!-- EMAIL -->
 
                 <div class="form-group">
 
@@ -99,6 +173,8 @@
                 </div>
 
 
+                <!-- PASSWORD -->
+
                 <div class="form-group">
 
                     <label for="adminPassword">
@@ -117,6 +193,8 @@
                 </div>
 
 
+                <!-- LOGIN BUTTON -->
+
                 <button
                     type="submit"
                     class="btn primary"
@@ -126,6 +204,8 @@
                 </button>
 
 
+                <!-- LOGIN MESSAGE -->
+
                 <div
                     id="adminLoginMessage"
                     class="form-message"
@@ -133,9 +213,11 @@
                     aria-live="polite"
                 ></div>
 
+
             </form>
 
         </section>
+
 
 
         <!-- =================================================
@@ -146,6 +228,11 @@
             id="adminDashboard"
             style="display: none;"
         >
+
+
+            <!-- =================================================
+                 ADMIN HEADER
+            ================================================== -->
 
             <div class="admin-header">
 
@@ -171,11 +258,15 @@
             </div>
 
 
+
             <!-- =================================================
                  STATISTICS
             ================================================== -->
 
             <div class="dashboard-stats">
+
+
+                <!-- PENDING -->
 
                 <div class="stat-card">
 
@@ -190,6 +281,8 @@
                 </div>
 
 
+                <!-- ACCEPTED -->
+
                 <div class="stat-card">
 
                     <h3 id="acceptedCount">
@@ -203,6 +296,8 @@
                 </div>
 
 
+                <!-- DECLINED -->
+
                 <div class="stat-card">
 
                     <h3 id="declinedCount">
@@ -215,7 +310,9 @@
 
                 </div>
 
+
             </div>
+
 
 
             <!-- =================================================
@@ -229,6 +326,7 @@
                     <h2>
                         Pending Registrations
                     </h2>
+
 
                     <button
                         type="button"
@@ -250,6 +348,7 @@
                 </div>
 
             </section>
+
 
 
             <!-- =================================================
@@ -274,6 +373,7 @@
             </section>
 
 
+
             <!-- =================================================
                  MEMBERS BY WARD
             ================================================== -->
@@ -296,8 +396,9 @@
             </section>
 
 
+
             <!-- =================================================
-                 EXCO
+                 EXCO MANAGEMENT
             ================================================== -->
 
             <section class="admin-section">
@@ -305,6 +406,7 @@
                 <h2>
                     Select EXCO
                 </h2>
+
 
                 <p>
                     Only the administrator can assign
@@ -334,40 +436,109 @@
                     id="excoMessage"
                     class="form-message"
                     role="alert"
+                    aria-live="polite"
                 ></div>
+
 
             </section>
 
+
         </section>
+
 
     </div>
 
 </main>
 
 
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
 <footer class="site-footer">
 
     <div class="container">
 
-        <p>
-            Ekiti State Women of Influence
-        </p>
+        <div class="footer-grid">
 
-        <p>
-            Ado Local Government
-        </p>
 
-        <p>
-            Ado LGA Coordinator:
-            08061254006
-        </p>
+            <!-- ORGANISATION -->
+
+            <div>
+
+                <img
+                    src="logo.jpeg"
+                    alt="Ekiti State Women of Influence Logo"
+                    class="footer-logo"
+                >
+
+                <h3>
+                    Ekiti State Women of Influence
+                </h3>
+
+                <p>
+                    Ado Local Government
+                </p>
+
+                <p>
+                    Empowering women and building
+                    stronger communities.
+                </p>
+
+            </div>
+
+
+            <!-- QUICK LINKS -->
+
+            <div>
+
+                <h3>
+                    Quick Links
+                </h3>
+
+                <p>
+                    <a href="index.html">
+                        Home
+                    </a>
+                </p>
+
+                <p>
+                    <a href="about.html">
+                        About
+                    </a>
+                </p>
+
+                <p>
+                    <a href="wards.html">
+                        Wards
+                    </a>
+                </p>
+
+                <p>
+                    <a href="register.html">
+                        Register
+                    </a>
+                </p>
+
+            </div>
+
+
+        </div>
 
     </div>
 
 </footer>
 
 
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
