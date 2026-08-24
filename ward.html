@@ -14,141 +14,377 @@
         Ward | Ekiti State Women of Influence
     </title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
 
 <body>
 
-<header class="header">
 
-    <a href="index.html" class="logo">
+<header class="site-header">
 
-        <span>ESWI</span>
+    <div class="header-container">
 
-        <div>
+        <a
+            href="index.html"
+            class="logo-area"
+        >
 
-            <h1>
-                Ekiti State Women of Influence
-            </h1>
+            <img
+                src="logo.jpeg"
+                alt="Logo"
+                class="site-logo"
+            >
 
-            <p>
-                Ado Local Government
-            </p>
+            <div class="logo-text">
 
-        </div>
+                <h1>
+                    Ekiti State Women of Influence
+                </h1>
 
-    </a>
+                <p>
+                    Ado Local Government
+                </p>
 
+            </div>
 
-    <button
-        class="menu-btn"
-        id="menuBtn"
-    >
-        ☰
-    </button>
-
-
-    <nav id="navMenu">
-
-        <a href="index.html">
-            Home
         </a>
 
-        <a href="wards.html">
-            Wards
-        </a>
 
-        <a href="register.html">
-            Register
-        </a>
+        <button
+            class="menu-btn"
+            id="menuBtn"
+            type="button"
+        >
+            ☰
+        </button>
 
-        <a href="admin.html">
-            Admin
-        </a>
 
-    </nav>
+        <nav
+            class="main-nav"
+            id="navMenu"
+        >
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a
+                href="wards.html"
+                class="active"
+            >
+                Wards
+            </a>
+
+            <a href="register.html">
+                Register
+            </a>
+
+            <a href="contact.html">
+                Contact
+            </a>
+
+            <a href="admin.html">
+                Admin
+            </a>
+
+        </nav>
+
+    </div>
 
 </header>
 
 
-<main>
+<main class="section">
 
-<section class="page-hero">
+    <div class="container">
 
-    <p class="section-label">
-        ADO LOCAL GOVERNMENT
-    </p>
+        <div class="content-card">
 
-    <h2 id="wardTitle">
-        Ward
-    </h2>
+            <div class="section-title">
 
-    <p id="wardDescription">
-        Ward information
-    </p>
+                <h2 id="wardTitle">
+                    Ward
+                </h2>
 
-</section>
+                <p id="wardDescription">
+                    Accepted members in this ward.
+                </p>
 
+            </div>
 
-<section class="section">
-
-    <div class="ward-detail-grid">
-
-
-        <div class="detail-card">
-
-            <h3>
-                👩 Accepted Members
-            </h3>
 
             <div id="wardMembers">
 
-                <p class="empty-state">
-                    No accepted members yet.
-                </p>
+                <div class="loading">
+                    Loading members...
+                </div>
+
+            </div>
+
+
+            <div style="text-align:center; margin-top:30px;">
+
+                <a
+                    href="wards.html"
+                    class="btn secondary"
+                >
+                    ← Back to All Wards
+                </a>
 
             </div>
 
         </div>
-
-
-        <div class="detail-card">
-
-            <h3>
-                👑 Ward Executive Committee
-            </h3>
-
-            <div id="wardExco">
-
-                <p>
-                    No executives have been appointed yet.
-                </p>
-
-            </div>
-
-        </div>
-
 
     </div>
-
-</section>
 
 </main>
 
 
-<footer>
+<footer class="site-footer">
 
-    <p>
-        © 2026 Ekiti State Women of Influence —
-        Ado Local Government.
-    </p>
+    <div class="container">
+
+        <h3>
+            Ekiti State Women of Influence
+        </h3>
+
+        <p>
+            Ado Local Government
+        </p>
+
+        <p>
+            Ado LGA Coordinator:
+            08061254006
+        </p>
+
+    </div>
 
 </footer>
 
 
 <script src="script.js"></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadWard
+);
+
+
+async function loadWard() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const ward =
+        Number(
+            params.get("ward")
+        );
+
+
+    const title =
+        document.getElementById(
+            "wardTitle"
+        );
+
+
+    const description =
+        document.getElementById(
+            "wardDescription"
+        );
+
+
+    const container =
+        document.getElementById(
+            "wardMembers"
+        );
+
+
+    if (
+        !ward ||
+        ward < 1 ||
+        ward > 13
+    ) {
+
+        title.textContent =
+            "Invalid Ward";
+
+        description.textContent =
+            "Please select a valid ward.";
+
+        container.innerHTML =
+            `
+            <div class="empty-state">
+                Invalid ward selected.
+            </div>
+            `;
+
+        return;
+
+    }
+
+
+    title.textContent =
+        `Ward ${ward}`;
+
+
+    description.textContent =
+        `Accepted members of Ward ${ward}.`;
+
+
+    try {
+
+        const members =
+            await supabaseRequest(
+                `members?status=eq.accepted&ward=eq.${ward}&select=full_name,phone,polling_booth,exco_position&order=full_name.asc`
+            );
+
+
+        if (
+            !members ||
+            members.length === 0
+        ) {
+
+            container.innerHTML =
+                `
+                <div class="empty-state">
+                    No accepted members in Ward ${ward} yet.
+                </div>
+                `;
+
+            return;
+
+        }
+
+
+        let html = `
+
+            <div class="member-table-wrapper">
+
+                <table class="member-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Polling Booth
+                            </th>
+
+                            <th>
+                                EXCO
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+        `;
+
+
+        members.forEach(
+            member => {
+
+                html += `
+
+                    <tr>
+
+                        <td>
+                            ${escapeHTML(
+                                member.full_name
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                member.phone
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                member.polling_booth
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                member.exco_position ||
+                                "—"
+                            )}
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        );
+
+
+        html += `
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        `;
+
+
+        container.innerHTML =
+            html;
+
+
+    } catch (error) {
+
+        console.error(
+            "WARD ERROR:",
+            error
+        );
+
+
+        container.innerHTML =
+            `
+            <div class="empty-state error">
+
+                Unable to load members.
+
+                <br><br>
+
+                ${escapeHTML(
+                    error.message
+                )}
+
+            </div>
+            `;
+
+    }
+
+}
+
+</script>
+
 
 </body>
 
