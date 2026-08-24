@@ -1,21 +1,25 @@
 /* =========================================================
    EKITI STATE WOMEN OF INFLUENCE
    ADO LOCAL GOVERNMENT
-   SUPABASE + WEBSITE JAVASCRIPT
+
+   SUPABASE WEBSITE SCRIPT
 ========================================================= */
 
 
 /* =========================================================
-   SUPABASE CONFIGURATION
+   SUPABASE CONFIG
 ========================================================= */
 
 const SUPABASE_URL =
     "https://yrqwttihowbzofqmormr.supabase.co";
 
-/*
-   REPLACE THIS WITH YOUR SUPABASE PUBLISHABLE KEY.
 
-   DO NOT PUT YOUR sb_secret_ KEY HERE.
+/*
+   IMPORTANT:
+
+   Put your sb_publishable_... key here.
+
+   NEVER put your sb_secret_... key here.
 */
 
 const SUPABASE_PUBLISHABLE_KEY =
@@ -23,7 +27,7 @@ const SUPABASE_PUBLISHABLE_KEY =
 
 
 /* =========================================================
-   SUPABASE REQUEST HELPER
+   BASIC SUPABASE REQUEST
 ========================================================= */
 
 async function supabaseRequest(
@@ -31,24 +35,30 @@ async function supabaseRequest(
     options = {}
 ) {
 
-    const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/${endpoint}`,
-        {
-            ...options,
+    const response =
+        await fetch(
+            `${SUPABASE_URL}/rest/v1/${endpoint}`,
+            {
 
-            headers: {
-                "Content-Type": "application/json",
+                ...options,
 
-                "apikey":
-                    SUPABASE_PUBLISHABLE_KEY,
+                headers: {
 
-                "Authorization":
-                    `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                    "Content-Type":
+                        "application/json",
 
-                ...(options.headers || {})
+                    "apikey":
+                        SUPABASE_PUBLISHABLE_KEY,
+
+                    "Authorization":
+                        `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+
+                    ...(options.headers || {})
+
+                }
+
             }
-        }
-    );
+        );
 
 
     const text =
@@ -62,11 +72,13 @@ async function supabaseRequest(
 
         try {
 
-            data = JSON.parse(text);
+            data =
+                JSON.parse(text);
 
         } catch {
 
-            data = text;
+            data =
+                text;
 
         }
 
@@ -75,17 +87,68 @@ async function supabaseRequest(
 
     if (!response.ok) {
 
+        console.error(
+            "Supabase error:",
+            data
+        );
+
+
         throw new Error(
             data?.message ||
-            data?.error_description ||
+            data?.msg ||
             data?.hint ||
-            "Supabase request failed"
+            data?.error_description ||
+            `Supabase error ${response.status}`
         );
 
     }
 
 
     return data;
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHTML(
+    value
+) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
 }
 
 
@@ -94,17 +157,25 @@ async function supabaseRequest(
 ========================================================= */
 
 const menuBtn =
-    document.getElementById("menuBtn");
+    document.getElementById(
+        "menuBtn"
+    );
+
 
 const navMenu =
-    document.getElementById("navMenu");
+    document.getElementById(
+        "navMenu"
+    );
 
 
-if (menuBtn && navMenu) {
+if (
+    menuBtn &&
+    navMenu
+) {
 
     menuBtn.addEventListener(
         "click",
-        () => {
+        function () {
 
             navMenu.classList.toggle(
                 "active"
@@ -117,7 +188,393 @@ if (menuBtn && navMenu) {
 
 
 /* =========================================================
-   WARD LIST
+   REGISTRATION
+========================================================= */
+
+const registrationForm =
+    document.getElementById(
+        "registrationForm"
+    );
+
+
+if (registrationForm) {
+
+    registrationForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const message =
+                document.getElementById(
+                    "formMessage"
+                );
+
+
+            const submitBtn =
+                document.getElementById(
+                    "submitBtn"
+                );
+
+
+            /*
+               GET FORM VALUES
+            */
+
+            const fullName =
+                document
+                    .getElementById(
+                        "fullName"
+                    )
+                    .value
+                    .trim();
+
+
+            const phone =
+                document
+                    .getElementById(
+                        "phone"
+                    )
+                    .value
+                    .trim();
+
+
+            const ward =
+                document
+                    .getElementById(
+                        "ward"
+                    )
+                    .value;
+
+
+            const pollingBooth =
+                document
+                    .getElementById(
+                        "pollingBooth"
+                    )
+                    .value
+                    .trim();
+
+
+            const accountName =
+                document
+                    .getElementById(
+                        "accountName"
+                    )
+                    .value
+                    .trim();
+
+
+            const accountNumber =
+                document
+                    .getElementById(
+                        "accountNumber"
+                    )
+                    .value
+                    .trim();
+
+
+            const bankName =
+                document
+                    .getElementById(
+                        "bankName"
+                    )
+                    .value
+                    .trim();
+
+
+            /*
+               CLEAR OLD MESSAGE
+            */
+
+            message.textContent =
+                "";
+
+
+            message.style.color =
+                "";
+
+
+            /*
+               VALIDATION
+            */
+
+            if (!fullName) {
+
+                showFormError(
+                    "Please enter your full name."
+                );
+
+                return;
+
+            }
+
+
+            if (!phone) {
+
+                showFormError(
+                    "Please enter your phone number."
+                );
+
+                return;
+
+            }
+
+
+            if (!ward) {
+
+                showFormError(
+                    "Please select your ward."
+                );
+
+                return;
+
+            }
+
+
+            if (!pollingBooth) {
+
+                showFormError(
+                    "Please enter your polling booth."
+                );
+
+                return;
+
+            }
+
+
+            if (!accountName) {
+
+                showFormError(
+                    "Please enter the account name."
+                );
+
+                return;
+
+            }
+
+
+            /*
+               ACCOUNT NUMBER
+            */
+
+            if (
+                !/^[0-9]{10}$/.test(
+                    accountNumber
+                )
+            ) {
+
+                showFormError(
+                    "Account number must contain exactly 10 digits."
+                );
+
+                return;
+
+            }
+
+
+            if (!bankName) {
+
+                showFormError(
+                    "Please enter your bank name."
+                );
+
+                return;
+
+            }
+
+
+            /*
+               CHECK PUBLISHABLE KEY
+            */
+
+            if (
+                !SUPABASE_PUBLISHABLE_KEY ||
+                SUPABASE_PUBLISHABLE_KEY ===
+                    "YOUR_SUPABASE_PUBLISHABLE_KEY"
+            ) {
+
+                showFormError(
+                    "Supabase is not configured yet. Add your publishable key to script.js."
+                );
+
+                return;
+
+            }
+
+
+            /*
+               DISABLE BUTTON
+            */
+
+            submitBtn.disabled =
+                true;
+
+
+            submitBtn.textContent =
+                "Submitting...";
+
+
+            message.textContent =
+                "Submitting your registration...";
+
+
+            message.style.color =
+                "#7c1d4a";
+
+
+            try {
+
+                /*
+                   SEND TO SUPABASE
+                */
+
+                await supabaseRequest(
+                    "members",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Prefer":
+                                "return=minimal"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                full_name:
+                                    fullName,
+
+                                phone:
+                                    phone,
+
+                                ward:
+                                    Number(
+                                        ward
+                                    ),
+
+                                polling_booth:
+                                    pollingBooth,
+
+                                account_name:
+                                    accountName,
+
+                                account_number:
+                                    accountNumber,
+
+                                bank_name:
+                                    bankName,
+
+                                status:
+                                    "pending"
+
+                            })
+
+                    }
+                );
+
+
+                /*
+                   SUCCESS
+                */
+
+                message.textContent =
+                    "Registration submitted successfully! Your application is now waiting for admin approval.";
+
+                message.style.color =
+                    "#166534";
+
+
+                /*
+                   CLEAR FORM
+                */
+
+                registrationForm.reset();
+
+
+            } catch (error) {
+
+                console.error(
+                    "REGISTRATION ERROR:",
+                    error
+                );
+
+
+                /*
+                   SHOW THE ACTUAL ERROR
+
+                   This makes debugging much easier.
+                */
+
+                message.textContent =
+                    "Registration failed: " +
+                    error.message;
+
+
+                message.style.color =
+                    "#b91c1c";
+
+            }
+
+
+            /*
+               ENABLE BUTTON
+            */
+
+            submitBtn.disabled =
+                false;
+
+
+            submitBtn.textContent =
+                "Submit Registration";
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FORM ERROR HELPER
+========================================================= */
+
+function showFormError(
+    text
+) {
+
+    const message =
+        document.getElementById(
+            "formMessage"
+        );
+
+
+    if (!message) {
+        return;
+    }
+
+
+    message.textContent =
+        text;
+
+
+    message.style.color =
+        "#b91c1c";
+
+
+    message.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+
+}
+
+
+/* =========================================================
+   WARD CARDS
 ========================================================= */
 
 function createWardCards() {
@@ -173,7 +630,9 @@ function createWardCards() {
         `;
 
 
-        wardGrid.appendChild(card);
+        wardGrid.appendChild(
+            card
+        );
 
     }
 
@@ -181,204 +640,6 @@ function createWardCards() {
 
 
 createWardCards();
-
-
-/* =========================================================
-   REGISTRATION FORM
-========================================================= */
-
-const registrationForm =
-    document.getElementById(
-        "registrationForm"
-    );
-
-
-if (registrationForm) {
-
-    registrationForm.addEventListener(
-        "submit",
-        async function (event) {
-
-            event.preventDefault();
-
-
-            const fullName =
-                document
-                    .getElementById("fullName")
-                    .value
-                    .trim();
-
-
-            const phone =
-                document
-                    .getElementById("phone")
-                    .value
-                    .trim();
-
-
-            const ward =
-                document
-                    .getElementById("ward")
-                    .value;
-
-
-            const pollingBooth =
-                document
-                    .getElementById(
-                        "pollingBooth"
-                    )
-                    .value
-                    .trim();
-
-
-            const accountName =
-                document
-                    .getElementById(
-                        "accountName"
-                    )
-                    .value
-                    .trim();
-
-
-            const bankName =
-                document
-                    .getElementById(
-                        "bankName"
-                    )
-                    .value
-                    .trim();
-
-
-            const message =
-                document.getElementById(
-                    "formMessage"
-                );
-
-
-            const submitButton =
-                document.getElementById(
-                    "submitBtn"
-                );
-
-
-            if (
-                !fullName ||
-                !phone ||
-                !ward ||
-                !pollingBooth ||
-                !accountName ||
-                !bankName
-            ) {
-
-                message.textContent =
-                    "Please complete all fields.";
-
-                message.style.color =
-                    "#b91c1c";
-
-                return;
-
-            }
-
-
-            submitButton.disabled =
-                true;
-
-
-            submitButton.textContent =
-                "Submitting...";
-
-
-            message.textContent =
-                "Submitting your registration...";
-
-
-            message.style.color =
-                "#7c1d4a";
-
-
-            try {
-
-                await supabaseRequest(
-                    "members",
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Prefer":
-                                "return=minimal"
-
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                full_name:
-                                    fullName,
-
-                                phone:
-                                    phone,
-
-                                ward:
-                                    Number(ward),
-
-                                polling_booth:
-                                    pollingBooth,
-
-                                account_name:
-                                    accountName,
-
-                                bank_name:
-                                    bankName,
-
-                                status:
-                                    "pending"
-
-                            })
-
-                    }
-                );
-
-
-                message.textContent =
-                    "Registration submitted successfully. Please wait for admin approval.";
-
-                message.style.color =
-                    "#166534";
-
-
-                registrationForm.reset();
-
-
-            } catch (error) {
-
-                console.error(
-                    error
-                );
-
-
-                message.textContent =
-                    "Registration failed. Please try again.";
-
-                message.style.color =
-                    "#b91c1c";
-
-            }
-
-
-            submitButton.disabled =
-                false;
-
-
-            submitButton.textContent =
-                "Submit Registration";
-
-        }
-    );
-
-}
 
 
 /* =========================================================
@@ -406,7 +667,9 @@ async function loadWardPage() {
 
     const ward =
         Number(
-            params.get("ward")
+            params.get(
+                "ward"
+            )
         );
 
 
@@ -423,9 +686,11 @@ async function loadWardPage() {
     ) {
 
         memberList.innerHTML =
-            `<div class="empty-state">
+            `
+            <div class="empty-state">
                 Invalid ward.
-            </div>`;
+            </div>
+            `;
 
         return;
 
@@ -441,9 +706,11 @@ async function loadWardPage() {
 
 
     memberList.innerHTML =
-        `<div class="empty-state">
+        `
+        <div class="empty-state">
             Loading members...
-        </div>`;
+        </div>
+        `;
 
 
     try {
@@ -463,16 +730,19 @@ async function loadWardPage() {
         ) {
 
             memberList.innerHTML =
-                `<div class="empty-state">
+                `
+                <div class="empty-state">
                     No accepted members in this ward yet.
-                </div>`;
+                </div>
+                `;
 
             return;
 
         }
 
 
-        memberList.innerHTML = "";
+        memberList.innerHTML =
+            "";
 
 
         members.forEach(
@@ -509,12 +779,13 @@ async function loadWardPage() {
                         member.exco_position
                             ? `
                                 <br>
+
                                 <span class="exco-badge">
                                     ${escapeHTML(
                                         member.exco_position
                                     )}
                                 </span>
-                              `
+                            `
                             : ""
                     }
 
@@ -537,9 +808,11 @@ async function loadWardPage() {
 
 
         memberList.innerHTML =
-            `<div class="empty-state">
+            `
+            <div class="empty-state">
                 Unable to load members.
-            </div>`;
+            </div>
+            `;
 
     }
 
@@ -547,32 +820,6 @@ async function loadWardPage() {
 
 
 loadWardPage();
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(value) {
-
-    if (
-        value === null ||
-        value === undefined
-    ) {
-
-        return "";
-
-    }
-
-
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-
-}
 
 
 /* =========================================================
@@ -594,7 +841,7 @@ async function loadPublicMemberCount() {
 
     try {
 
-        const result =
+        const response =
             await fetch(
                 `${SUPABASE_URL}/rest/v1/members?status=eq.accepted&select=id`,
                 {
@@ -617,23 +864,29 @@ async function loadPublicMemberCount() {
 
 
         const range =
-            result.headers.get(
+            response.headers.get(
                 "content-range"
             );
 
 
-        if (range) {
+        if (!range) {
+            return;
+        }
 
-            const count =
-                range.split("/")[1];
+
+        const count =
+            range.split(
+                "/"
+            )[1];
 
 
-            if (count !== "*") {
+        if (
+            count &&
+            count !== "*"
+        ) {
 
-                counter.textContent =
-                    count;
-
-            }
+            counter.textContent =
+                count;
 
         }
 
@@ -652,18 +905,123 @@ loadPublicMemberCount();
 
 
 /* =========================================================
-   ADMIN LOGIN
+   SUPABASE AUTH
 ========================================================= */
 
-/*
-   TEMPORARY FRONT-END ADMIN LOGIN.
+let currentAdmin = null;
 
-   IMPORTANT:
-   This is NOT secure authentication.
 
-   We will replace this with Supabase Auth
-   before putting the admin system into production.
-*/
+/* =========================================================
+   GET ACCESS TOKEN
+========================================================= */
+
+function getAccessToken() {
+
+    return localStorage.getItem(
+        "supabase_access_token"
+    );
+
+}
+
+
+/* =========================================================
+   AUTHENTICATED ADMIN REQUEST
+========================================================= */
+
+async function adminRequest(
+    endpoint,
+    options = {}
+) {
+
+    const token =
+        getAccessToken();
+
+
+    if (!token) {
+
+        throw new Error(
+            "You are not logged in."
+        );
+
+    }
+
+
+    const response =
+        await fetch(
+            `${SUPABASE_URL}/rest/v1/${endpoint}`,
+            {
+
+                ...options,
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    "apikey":
+                        SUPABASE_PUBLISHABLE_KEY,
+
+                    "Authorization":
+                        `Bearer ${token}`,
+
+                    ...(options.headers || {})
+
+                }
+
+            }
+        );
+
+
+    const text =
+        await response.text();
+
+
+    let data = null;
+
+
+    if (text) {
+
+        try {
+
+            data =
+                JSON.parse(text);
+
+        } catch {
+
+            data =
+                text;
+
+        }
+
+    }
+
+
+    if (!response.ok) {
+
+        console.error(
+            "ADMIN REQUEST ERROR:",
+            data
+        );
+
+
+        throw new Error(
+            data?.message ||
+            data?.hint ||
+            data?.msg ||
+            `Request failed (${response.status})`
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
 
 const adminLoginForm =
     document.getElementById(
@@ -675,21 +1033,26 @@ if (adminLoginForm) {
 
     adminLoginForm.addEventListener(
         "submit",
-        function (event) {
+        async function (event) {
 
             event.preventDefault();
 
 
-            const username =
-                document.getElementById(
-                    "adminUsername"
-                ).value.trim();
+            const email =
+                document
+                    .getElementById(
+                        "adminEmail"
+                    )
+                    .value
+                    .trim();
 
 
             const password =
-                document.getElementById(
-                    "adminPassword"
-                ).value;
+                document
+                    .getElementById(
+                        "adminPassword"
+                    )
+                    .value;
 
 
             const message =
@@ -698,33 +1061,120 @@ if (adminLoginForm) {
                 );
 
 
-            /*
-               TEMPORARY credentials.
-            */
-
-            if (
-                username === "admin" &&
-                password === "Admin123!"
-            ) {
-
-                sessionStorage.setItem(
-                    "ado_admin_logged_in",
-                    "true"
+            const button =
+                document.getElementById(
+                    "loginBtn"
                 );
 
 
-                window.location.href =
-                    "admin.html";
+            button.disabled =
+                true;
 
-            } else {
+
+            button.textContent =
+                "Logging in...";
+
+
+            message.textContent =
+                "";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+                        {
+
+                            method:
+                                "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "apikey":
+                                    SUPABASE_PUBLISHABLE_KEY
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    email:
+                                        email,
+
+                                    password:
+                                        password
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data?.msg ||
+                        data?.error_description ||
+                        "Invalid email or password."
+                    );
+
+                }
+
+
+                localStorage.setItem(
+                    "supabase_access_token",
+                    data.access_token
+                );
+
+
+                localStorage.setItem(
+                    "supabase_refresh_token",
+                    data.refresh_token
+                );
+
 
                 message.textContent =
-                    "Invalid admin login.";
+                    "Login successful.";
+
+                message.style.color =
+                    "#166534";
+
+
+                await checkAdminSession();
+
+
+            } catch (error) {
+
+                console.error(
+                    "LOGIN ERROR:",
+                    error
+                );
+
+
+                message.textContent =
+                    error.message;
+
 
                 message.style.color =
                     "#b91c1c";
 
             }
+
+
+            button.disabled =
+                false;
+
+
+            button.textContent =
+                "Login";
 
         }
     );
@@ -733,37 +1183,131 @@ if (adminLoginForm) {
 
 
 /* =========================================================
-   ADMIN DASHBOARD
+   CHECK ADMIN SESSION
 ========================================================= */
 
-const adminDashboard =
-    document.getElementById(
-        "adminDashboard"
-    );
+async function checkAdminSession() {
+
+    const login =
+        document.getElementById(
+            "adminLogin"
+        );
 
 
-if (adminDashboard) {
-
-    const loggedIn =
-        sessionStorage.getItem(
-            "ado_admin_logged_in"
+    const dashboard =
+        document.getElementById(
+            "adminDashboard"
         );
 
 
     if (
-        loggedIn !== "true"
+        !login ||
+        !dashboard
     ) {
 
-        window.location.href =
-            "admin.html";
+        return;
+
+    }
+
+
+    const token =
+        getAccessToken();
+
+
+    if (!token) {
+
+        login.style.display =
+            "block";
+
+        dashboard.style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${SUPABASE_URL}/auth/v1/user`,
+                {
+
+                    headers: {
+
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            `Bearer ${token}`
+
+                    }
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Session expired."
+            );
+
+        }
+
+
+        currentAdmin =
+            await response.json();
+
+
+        login.style.display =
+            "none";
+
+
+        dashboard.style.display =
+            "block";
+
+
+        await loadAdminData();
+
+        await loadExcoManager();
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        localStorage.removeItem(
+            "supabase_access_token"
+        );
+
+
+        localStorage.removeItem(
+            "supabase_refresh_token"
+        );
+
+
+        login.style.display =
+            "block";
+
+
+        dashboard.style.display =
+            "none";
 
     }
 
 }
 
 
+checkAdminSession();
+
+
 /* =========================================================
-   ADMIN LOGOUT
+   LOGOUT
 ========================================================= */
 
 const logoutBtn =
@@ -776,15 +1320,58 @@ if (logoutBtn) {
 
     logoutBtn.addEventListener(
         "click",
-        function () {
+        async function () {
 
-            sessionStorage.removeItem(
-                "ado_admin_logged_in"
+            const token =
+                getAccessToken();
+
+
+            try {
+
+                if (token) {
+
+                    await fetch(
+                        `${SUPABASE_URL}/auth/v1/logout`,
+                        {
+
+                            method:
+                                "POST",
+
+                            headers: {
+
+                                "apikey":
+                                    SUPABASE_PUBLISHABLE_KEY,
+
+                                "Authorization":
+                                    `Bearer ${token}`
+
+                            }
+
+                        }
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+            }
+
+
+            localStorage.removeItem(
+                "supabase_access_token"
             );
 
 
-            window.location.href =
-                "admin.html";
+            localStorage.removeItem(
+                "supabase_refresh_token"
+            );
+
+
+            window.location.reload();
 
         }
     );
@@ -793,200 +1380,7 @@ if (logoutBtn) {
 
 
 /* =========================================================
-   ADMIN MEMBER FUNCTIONS
-========================================================= */
-
-async function getMembers(
-    status = null,
-    ward = null
-) {
-
-    let endpoint =
-        "members?select=*";
-
-
-    if (status) {
-
-        endpoint +=
-            `&status=eq.${encodeURIComponent(
-                status
-            )}`;
-
-    }
-
-
-    if (ward) {
-
-        endpoint +=
-            `&ward=eq.${ward}`;
-
-    }
-
-
-    endpoint +=
-        "&order=created_at.desc";
-
-
-    return await supabaseRequest(
-        endpoint,
-        {
-            method: "GET"
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ACCEPT MEMBER
-========================================================= */
-
-async function acceptMember(
-    id
-) {
-
-    if (
-        !confirm(
-            "Accept this registration?"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        await supabaseRequest(
-            `members?id=eq.${id}`,
-            {
-
-                method: "PATCH",
-
-                headers: {
-
-                    "Prefer":
-                        "return=minimal"
-
-                },
-
-                body:
-                    JSON.stringify({
-
-                        status:
-                            "accepted",
-
-                        reviewed_at:
-                            new Date()
-                                .toISOString()
-
-                    })
-
-            }
-        );
-
-
-        alert(
-            "Registration accepted."
-        );
-
-
-        loadAdminData();
-
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            "Unable to accept registration."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   DECLINE MEMBER
-========================================================= */
-
-async function declineMember(
-    id
-) {
-
-    if (
-        !confirm(
-            "Decline this registration?"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        await supabaseRequest(
-            `members?id=eq.${id}`,
-            {
-
-                method: "PATCH",
-
-                headers: {
-
-                    "Prefer":
-                        "return=minimal"
-
-                },
-
-                body:
-                    JSON.stringify({
-
-                        status:
-                            "declined",
-
-                        reviewed_at:
-                            new Date()
-                                .toISOString()
-
-                    })
-
-            }
-        );
-
-
-        alert(
-            "Registration declined."
-        );
-
-
-        loadAdminData();
-
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            "Unable to decline registration."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   ADMIN DATA
+   LOAD ADMIN DATA
 ========================================================= */
 
 async function loadAdminData() {
@@ -997,36 +1391,17 @@ async function loadAdminData() {
         );
 
 
-    const acceptedList =
-        document.getElementById(
-            "acceptedList"
-        );
-
-
-    if (
-        !pendingList &&
-        !acceptedList
-    ) {
-
+    if (!pendingList) {
         return;
-
-    }
-
-
-    if (pendingList) {
-
-        pendingList.innerHTML =
-            `<div class="empty-state">
-                Loading registrations...
-            </div>`;
-
     }
 
 
     try {
 
         const members =
-            await getMembers();
+            await adminRequest(
+                "members?select=*&order=created_at.desc"
+            );
 
 
         const pending =
@@ -1053,30 +1428,30 @@ async function loadAdminData() {
             );
 
 
-        updateAdminStat(
+        setText(
             "pendingCount",
             pending.length
         );
 
 
-        updateAdminStat(
+        setText(
             "acceptedCount",
             accepted.length
         );
 
 
-        updateAdminStat(
+        setText(
             "declinedCount",
             declined.length
         );
 
 
-        renderPendingMembers(
+        renderPending(
             pending
         );
 
 
-        renderAcceptedMembers(
+        renderAccepted(
             accepted
         );
 
@@ -1093,14 +1468,14 @@ async function loadAdminData() {
         );
 
 
-        if (pendingList) {
-
-            pendingList.innerHTML =
-                `<div class="empty-state">
-                    Unable to load registrations.
-                </div>`;
-
-        }
+        pendingList.innerHTML =
+            `
+            <div class="empty-state">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
+            `;
 
     }
 
@@ -1108,16 +1483,18 @@ async function loadAdminData() {
 
 
 /* =========================================================
-   ADMIN STATS
+   SET TEXT
 ========================================================= */
 
-function updateAdminStat(
+function setText(
     id,
     value
 ) {
 
     const element =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
 
 
     if (element) {
@@ -1131,10 +1508,10 @@ function updateAdminStat(
 
 
 /* =========================================================
-   PENDING MEMBERS
+   PENDING REGISTRATIONS
 ========================================================= */
 
-function renderPendingMembers(
+function renderPending(
     members
 ) {
 
@@ -1149,7 +1526,8 @@ function renderPendingMembers(
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     if (
@@ -1157,9 +1535,11 @@ function renderPendingMembers(
     ) {
 
         container.innerHTML =
-            `<div class="empty-state">
+            `
+            <div class="empty-state">
                 No pending registrations.
-            </div>`;
+            </div>
+            `;
 
         return;
 
@@ -1181,85 +1561,64 @@ function renderPendingMembers(
 
             item.innerHTML = `
 
-                <div class="registration-header">
+                <h4>
+                    ${escapeHTML(
+                        member.full_name
+                    )}
+                </h4>
 
-                    <div>
+                <p>
+                    <strong>Phone:</strong>
+                    ${escapeHTML(
+                        member.phone
+                    )}
+                </p>
 
-                        <h4>
-                            ${escapeHTML(
-                                member.full_name
-                            )}
-                        </h4>
+                <p>
+                    <strong>Ward:</strong>
+                    Ward ${member.ward}
+                </p>
 
-                        <span class="status pending">
-                            Pending
-                        </span>
+                <p>
+                    <strong>Polling Booth:</strong>
+                    ${escapeHTML(
+                        member.polling_booth
+                    )}
+                </p>
 
-                    </div>
+                <p>
+                    <strong>Account Name:</strong>
+                    ${escapeHTML(
+                        member.account_name
+                    )}
+                </p>
 
-                </div>
+                <p>
+                    <strong>Account Number:</strong>
+                    ${escapeHTML(
+                        member.account_number
+                    )}
+                </p>
 
-
-                <div class="registration-details">
-
-                    <div>
-                        <strong>Phone:</strong>
-                        ${escapeHTML(
-                            member.phone
-                        )}
-                    </div>
-
-                    <div>
-                        <strong>Ward:</strong>
-                        ${member.ward}
-                    </div>
-
-                    <div>
-                        <strong>Polling Booth:</strong>
-                        ${escapeHTML(
-                            member.polling_booth
-                        )}
-                    </div>
-
-                    <div>
-                        <strong>Account Name:</strong>
-                        ${escapeHTML(
-                            member.account_name
-                        )}
-                    </div>
-
-                    <div>
-                        <strong>Bank:</strong>
-                        ${escapeHTML(
-                            member.bank_name
-                        )}
-                    </div>
-
-                    <div>
-                        <strong>Registered:</strong>
-                        ${escapeHTML(
-                            new Date(
-                                member.created_at
-                            ).toLocaleString()
-                        )}
-                    </div>
-
-                </div>
-
+                <p>
+                    <strong>Bank:</strong>
+                    ${escapeHTML(
+                        member.bank_name
+                    )}
+                </p>
 
                 <div class="registration-actions">
 
                     <button
                         class="small-btn accept-btn"
-                        onclick="acceptMember(${member.id})"
+                        onclick="approveMember(${member.id})"
                     >
                         ✓ Accept
                     </button>
 
-
                     <button
                         class="small-btn decline-btn"
-                        onclick="declineMember(${member.id})"
+                        onclick="rejectMember(${member.id})"
                     >
                         ✕ Decline
                     </button>
@@ -1280,10 +1639,140 @@ function renderPendingMembers(
 
 
 /* =========================================================
+   APPROVE
+========================================================= */
+
+async function approveMember(
+    id
+) {
+
+    if (
+        !confirm(
+            "Accept this registration?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await adminRequest(
+            `members?id=eq.${id}`,
+            {
+
+                method:
+                    "PATCH",
+
+                headers: {
+
+                    "Prefer":
+                        "return=minimal"
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        status:
+                            "accepted",
+
+                        reviewed_at:
+                            new Date()
+                                .toISOString()
+
+                    })
+
+            }
+        );
+
+
+        await loadAdminData();
+
+
+    } catch (error) {
+
+        alert(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REJECT
+========================================================= */
+
+async function rejectMember(
+    id
+) {
+
+    if (
+        !confirm(
+            "Decline this registration?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await adminRequest(
+            `members?id=eq.${id}`,
+            {
+
+                method:
+                    "PATCH",
+
+                headers: {
+
+                    "Prefer":
+                        "return=minimal"
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        status:
+                            "declined",
+
+                        reviewed_at:
+                            new Date()
+                                .toISOString()
+
+                    })
+
+            }
+        );
+
+
+        await loadAdminData();
+
+
+    } catch (error) {
+
+        alert(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
    ACCEPTED MEMBERS
 ========================================================= */
 
-function renderAcceptedMembers(
+function renderAccepted(
     members
 ) {
 
@@ -1298,7 +1787,8 @@ function renderAcceptedMembers(
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     if (
@@ -1306,26 +1796,28 @@ function renderAcceptedMembers(
     ) {
 
         container.innerHTML =
-            `<div class="empty-state">
+            `
+            <div class="empty-state">
                 No accepted members yet.
-            </div>`;
+            </div>
+            `;
 
         return;
 
     }
 
 
-    const tableWrapper =
+    const wrapper =
         document.createElement(
             "div"
         );
 
 
-    tableWrapper.className =
+    wrapper.className =
         "member-table-wrapper";
 
 
-    tableWrapper.innerHTML = `
+    wrapper.innerHTML = `
 
         <table class="member-table">
 
@@ -1346,11 +1838,11 @@ function renderAcceptedMembers(
                     </th>
 
                     <th>
-                        Polling Booth
+                        Booth
                     </th>
 
                     <th>
-                        Account Name
+                        Account
                     </th>
 
                     <th>
@@ -1398,6 +1890,10 @@ function renderAcceptedMembers(
                             ${escapeHTML(
                                 member.account_name
                             )}
+                            <br>
+                            ${escapeHTML(
+                                member.account_number
+                            )}
                         </td>
 
                         <td>
@@ -1407,23 +1903,10 @@ function renderAcceptedMembers(
                         </td>
 
                         <td>
-
-                            ${
-                                member.exco_position
-                                    ? `
-                                        <span class="exco-badge">
-                                            ${escapeHTML(
-                                                member.exco_position
-                                            )}
-                                        </span>
-                                      `
-                                    : `
-                                        <span class="not-exco">
-                                            Not selected
-                                        </span>
-                                      `
-                            }
-
+                            ${escapeHTML(
+                                member.exco_position ||
+                                "Not selected"
+                            )}
                         </td>
 
                     </tr>
@@ -1439,14 +1922,14 @@ function renderAcceptedMembers(
 
 
     container.appendChild(
-        tableWrapper
+        wrapper
     );
 
 }
 
 
 /* =========================================================
-   WARD MEMBER LIST
+   WARD MEMBERS
 ========================================================= */
 
 function renderWardMembers(
@@ -1464,7 +1947,8 @@ function renderWardMembers(
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     for (
@@ -1476,47 +1960,35 @@ function renderWardMembers(
         const wardMembers =
             members.filter(
                 member =>
-                    Number(member.ward) ===
-                    ward
+                    Number(
+                        member.ward
+                    ) === ward
             );
 
 
-        const card =
+        const section =
             document.createElement(
                 "div"
             );
 
 
-        card.className =
-            "admin-card";
+        section.className =
+            "ward-admin-section";
 
 
-        card.innerHTML = `
+        section.innerHTML = `
 
-            <div class="ward-member-header">
-
-                <div>
-
-                    <strong>
-                        Ward ${ward}
-                    </strong>
-
-                    <span>
-                        ${wardMembers.length}
-                        accepted member(s)
-                    </span>
-
-                </div>
-
-            </div>
+            <h4>
+                Ward ${ward}
+                (${wardMembers.length})
+            </h4>
 
             ${
                 wardMembers.length === 0
                     ? `
-                        <div class="empty-state">
-                            No accepted members
-                            in Ward ${ward}.
-                        </div>
+                        <p>
+                            No accepted members.
+                        </p>
                       `
                     : `
                         <div class="member-table-wrapper">
@@ -1573,15 +2045,10 @@ function renderWardMembers(
                                             </td>
 
                                             <td>
-
-                                                ${
-                                                    member.exco_position
-                                                        ? escapeHTML(
-                                                            member.exco_position
-                                                        )
-                                                        : "Not selected"
-                                                }
-
+                                                ${escapeHTML(
+                                                    member.exco_position ||
+                                                    "—"
+                                                )}
                                             </td>
 
                                         </tr>
@@ -1594,35 +2061,17 @@ function renderWardMembers(
                             </table>
 
                         </div>
-                      `
+                    `
             }
 
         `;
 
 
         container.appendChild(
-            card
+            section
         );
 
     }
-
-}
-
-
-/* =========================================================
-   LOAD ADMIN DATA
-========================================================= */
-
-if (
-    document.getElementById(
-        "pendingList"
-    ) ||
-    document.getElementById(
-        "acceptedList"
-    )
-) {
-
-    loadAdminData();
 
 }
 
@@ -1647,15 +2096,15 @@ const EXCO_POSITIONS = [
 
     "Public Relations Officer",
 
-    "Welfare Officer",
+    "Organising Secretary",
 
-    "Organising Secretary"
+    "Welfare Officer"
 
 ];
 
 
 /* =========================================================
-   LOAD EXCO MANAGER
+   LOAD EXCO
 ========================================================= */
 
 async function loadExcoManager() {
@@ -1674,12 +2123,13 @@ async function loadExcoManager() {
     try {
 
         const members =
-            await getMembers(
-                "accepted"
+            await adminRequest(
+                "members?status=eq.accepted&select=id,full_name,ward,exco_position&order=full_name.asc"
             );
 
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
 
 
         EXCO_POSITIONS.forEach(
@@ -1715,20 +2165,22 @@ async function loadExcoManager() {
                     position;
 
 
-                const empty =
+                const emptyOption =
                     document.createElement(
                         "option"
                     );
 
 
-                empty.value = "";
+                emptyOption.value =
+                    "";
 
-                empty.textContent =
+
+                emptyOption.textContent =
                     "Select member";
 
 
                 select.appendChild(
-                    empty
+                    emptyOption
                 );
 
 
@@ -1794,16 +2246,17 @@ async function loadExcoManager() {
 
 
         container.innerHTML =
-            `<div class="empty-state">
-                Unable to load EXCO members.
-            </div>`;
+            `
+            <div class="empty-state">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
+            `;
 
     }
 
 }
-
-
-loadExcoManager();
 
 
 /* =========================================================
@@ -1822,12 +2275,6 @@ if (saveExcoBtn) {
         "click",
         async function () {
 
-            const selects =
-                document.querySelectorAll(
-                    "#excoManager select"
-                );
-
-
             saveExcoBtn.disabled =
                 true;
 
@@ -1839,14 +2286,15 @@ if (saveExcoBtn) {
             try {
 
                 /*
-                   First clear existing EXCO positions.
+                   CLEAR OLD EXCO
                 */
 
-                await supabaseRequest(
+                await adminRequest(
                     "members?status=eq.accepted",
                     {
 
-                        method: "PATCH",
+                        method:
+                            "PATCH",
 
                         headers: {
 
@@ -1868,8 +2316,14 @@ if (saveExcoBtn) {
 
 
                 /*
-                   Assign selected positions.
+                   ASSIGN NEW EXCO
                 */
+
+                const selects =
+                    document.querySelectorAll(
+                        "#excoManager select"
+                    );
+
 
                 for (
                     const select of selects
@@ -1888,11 +2342,12 @@ if (saveExcoBtn) {
                     }
 
 
-                    await supabaseRequest(
+                    await adminRequest(
                         `members?id=eq.${memberId}`,
                         {
 
-                            method: "PATCH",
+                            method:
+                                "PATCH",
 
                             headers: {
 
@@ -1920,9 +2375,9 @@ if (saveExcoBtn) {
                 );
 
 
-                loadAdminData();
+                await loadAdminData();
 
-                loadExcoManager();
+                await loadExcoManager();
 
 
             } catch (error) {
@@ -1933,7 +2388,7 @@ if (saveExcoBtn) {
 
 
                 alert(
-                    "Unable to save EXCO positions."
+                    error.message
                 );
 
             }
