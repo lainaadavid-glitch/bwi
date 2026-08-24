@@ -1,24 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Ekiti State Women of Influence | Ado LG</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header class="header">
 
-    <a href="#home" class="logo">
+    <a href="index.html" class="logo">
         <span>ESWI</span>
 
         <div>
@@ -27,26 +20,21 @@
         </div>
     </a>
 
-    <button class="menu-btn" id="menuBtn">
-        ☰
-    </button>
+    <button class="menu-btn" id="menuBtn">☰</button>
 
     <nav id="navMenu">
-        <a href="#home">Home</a>
-        <a href="#wards">Wards</a>
-        <a href="#register">Register</a>
-        <a href="#contact">Contact</a>
-        <a href="#admin">Admin</a>
+        <a href="index.html">Home</a>
+        <a href="wards.html">Wards</a>
+        <a href="register.html">Register</a>
+        <a href="admin.html">Admin</a>
     </nav>
 
 </header>
 
 
-<!-- =====================================================
-     HERO
-===================================================== -->
+<main>
 
-<section class="hero" id="home">
+<section class="hero">
 
     <div class="hero-content">
 
@@ -66,11 +54,11 @@
 
         <div class="hero-buttons">
 
-            <a href="#wards" class="btn primary">
+            <a href="wards.html" class="btn primary">
                 Explore Wards
             </a>
 
-            <a href="#register" class="btn secondary">
+            <a href="register.html" class="btn secondary">
                 Register Now
             </a>
 
@@ -81,569 +69,114 @@
 </section>
 
 
-<!-- =====================================================
-     STATS
-===================================================== -->
-
 <section class="stats">
 
     <div class="stat-card">
-
         <strong>13</strong>
-
-        <span>
-            Wards
-        </span>
-
+        <span>Wards</span>
     </div>
 
-
     <div class="stat-card">
-
         <strong>1</strong>
-
-        <span>
-            Local Government
-        </span>
-
+        <span>Local Government</span>
     </div>
-
 
     <div class="stat-card">
-
-        <strong id="publicMemberCount">
-            0
-        </strong>
-
-        <span>
-            Accepted Members
-        </span>
-
+        <strong id="publicMemberCount">0</strong>
+        <span>Accepted Members</span>
     </div>
 
 </section>
 
 
-<!-- =====================================================
-     WARDS
-===================================================== -->
-
-<section class="section" id="wards">
+<section class="section">
 
     <div class="section-heading">
 
         <p class="section-label">
-            OUR STRUCTURE
+            EKITI STATE WOMEN OF INFLUENCE
         </p>
 
         <h2>
-            Explore Ado LG Wards
+            Women Leading Change
         </h2>
 
         <p>
-            Select a ward to view accepted members and
-            the current ward executive structure.
+            Our platform connects women across Ado Local
+            Government and provides a structured system for
+            membership, ward organization and leadership.
         </p>
 
     </div>
 
 
-    <div class="ward-grid" id="wardGrid">
-        <!-- JavaScript generates Ward 1–13 -->
-    </div>
+    <div class="feature-grid">
 
-</section>
+        <a href="wards.html" class="feature-card">
 
+            <div class="feature-icon">🏛️</div>
 
-<!-- =====================================================
-     WARD DETAILS
-===================================================== -->
+            <h3>
+                13 Wards
+            </h3>
 
-<section class="section ward-details" id="wardDetails">
+            <p>
+                Explore the wards of Ado Local Government
+                and view their leadership structure.
+            </p>
 
-    <button
-        id="closeWard"
-        class="close-btn"
-        type="button"
-    >
-        ✕
-    </button>
+            <span>
+                Explore Wards →
+            </span>
 
-    <div id="wardContent">
+        </a>
 
-        <h2>
-            Select a Ward
-        </h2>
 
-        <p>
-            Select one of the 13 wards above.
-        </p>
+        <a href="register.html" class="feature-card">
 
-    </div>
+            <div class="feature-icon">📝</div>
 
-</section>
+            <h3>
+                Membership
+            </h3>
 
+            <p>
+                Register to become a member and have your
+                application reviewed by the administrator.
+            </p>
 
-<!-- =====================================================
-     REGISTRATION
-===================================================== -->
+            <span>
+                Register →
+            </span>
 
-<section
-    class="section register-section"
-    id="register"
->
+        </a>
 
-    <div class="section-heading">
 
-        <p class="section-label">
-            JOIN US
-        </p>
+        <a href="admin.html" class="feature-card">
 
-        <h2>
-            Register as a Woman of Influence
-        </h2>
+            <div class="feature-icon">👑</div>
 
-        <p>
-            Submit your information for review by the
-            organization administrator.
-        </p>
+            <h3>
+                Leadership
+            </h3>
 
-    </div>
+            <p>
+                Authorized administrators manage applications
+                and appoint ward executives.
+            </p>
 
+            <span>
+                Admin Panel →
+            </span>
 
-    <form id="registrationForm">
-
-        <div class="form-grid">
-
-
-            <div class="form-group">
-
-                <label for="fullName">
-                    Full Name *
-                </label>
-
-                <input
-                    type="text"
-                    id="fullName"
-                    placeholder="Enter your full name"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="phone">
-                    Phone Number *
-                </label>
-
-                <input
-                    type="tel"
-                    id="phone"
-                    placeholder="Enter your phone number"
-                    required
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="email">
-                    Email Address
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter your email"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="wardSelect">
-                    Select Your Ward *
-                </label>
-
-                <select
-                    id="wardSelect"
-                    required
-                >
-
-                    <option value="">
-                        Select your ward
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="occupation">
-                    Occupation
-                </label>
-
-                <input
-                    type="text"
-                    id="occupation"
-                    placeholder="Enter your occupation"
-                >
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="role">
-                    Area of Influence
-                </label>
-
-                <select id="role">
-
-                    <option value="">
-                        Select an area
-                    </option>
-
-                    <option>
-                        Business
-                    </option>
-
-                    <option>
-                        Politics
-                    </option>
-
-                    <option>
-                        Education
-                    </option>
-
-                    <option>
-                        Community Development
-                    </option>
-
-                    <option>
-                        Healthcare
-                    </option>
-
-                    <option>
-                        Entrepreneurship
-                    </option>
-
-                    <option>
-                        Agriculture
-                    </option>
-
-                    <option>
-                        Other
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="message">
-                Tell us about yourself
-            </label>
-
-            <textarea
-                id="message"
-                rows="5"
-                placeholder="Briefly describe your work or community impact"
-            ></textarea>
-
-        </div>
-
-
-        <button
-            type="submit"
-            class="btn primary"
-        >
-            Submit Registration
-        </button>
-
-
-        <p id="formMessage"></p>
-
-    </form>
-
-</section>
-
-
-<!-- =====================================================
-     ADMIN PANEL
-===================================================== -->
-
-<section
-    class="admin-section"
-    id="admin"
->
-
-    <div class="section-heading">
-
-        <p class="section-label">
-            ADMINISTRATION
-        </p>
-
-        <h2>
-            Admin Panel
-        </h2>
-
-        <p>
-            Manage registrations and select ward executives.
-        </p>
-
-    </div>
-
-
-    <!-- ADMIN LOGIN -->
-
-    <div
-        id="adminLogin"
-        class="admin-card"
-    >
-
-        <h3>
-            Administrator Login
-        </h3>
-
-        <p class="admin-description">
-            Authorized administrators only.
-        </p>
-
-
-        <div class="form-group">
-
-            <label for="adminUsername">
-                Username
-            </label>
-
-            <input
-                type="text"
-                id="adminUsername"
-                placeholder="Enter username"
-            >
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="adminPassword">
-                Password
-            </label>
-
-            <input
-                type="password"
-                id="adminPassword"
-                placeholder="Enter password"
-            >
-
-        </div>
-
-
-        <button
-            id="adminLoginBtn"
-            class="btn primary"
-            type="button"
-        >
-            Login
-        </button>
-
-
-        <p id="adminLoginMessage"></p>
-
-    </div>
-
-
-    <!-- ADMIN DASHBOARD -->
-
-    <div
-        id="adminDashboard"
-        class="admin-dashboard"
-    >
-
-
-        <!-- ADMIN HEADER -->
-
-        <div class="admin-topbar">
-
-            <div>
-
-                <p class="section-label">
-                    CONTROL PANEL
-                </p>
-
-                <h3>
-                    Administrator Dashboard
-                </h3>
-
-                <p>
-                    Review applications and manage ward executives.
-                </p>
-
-            </div>
-
-
-            <button
-                id="adminLogoutBtn"
-                class="btn logout-btn"
-                type="button"
-            >
-                Logout
-            </button>
-
-        </div>
-
-
-        <!-- ADMIN STATS -->
-
-        <div class="admin-stats">
-
-            <div class="admin-stat pending">
-
-                <strong id="pendingCount">
-                    0
-                </strong>
-
-                <span>
-                    Pending
-                </span>
-
-            </div>
-
-
-            <div class="admin-stat accepted">
-
-                <strong id="acceptedCount">
-                    0
-                </strong>
-
-                <span>
-                    Accepted
-                </span>
-
-            </div>
-
-
-            <div class="admin-stat declined">
-
-                <strong id="declinedCount">
-                    0
-                </strong>
-
-                <span>
-                    Declined
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- REGISTRATION MANAGEMENT -->
-
-        <div class="admin-card">
-
-            <div class="admin-card-heading">
-
-                <div>
-
-                    <h3>
-                        Registration Management
-                    </h3>
-
-                    <p>
-                        Review submitted applications.
-                    </p>
-
-                </div>
-
-
-                <select id="adminWardFilter">
-
-                    <option value="all">
-                        All Wards
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div id="registrationList">
-
-                <p class="empty-state">
-                    No registrations yet.
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- EXCO MANAGEMENT -->
-
-        <div class="admin-card">
-
-            <div class="admin-card-heading">
-
-                <div>
-
-                    <h3>
-                        Ward EXCO Management
-                    </h3>
-
-                    <p>
-                        Only accepted members can be appointed.
-                    </p>
-
-                </div>
-
-
-                <select id="excoWardSelect">
-
-                    <option value="">
-                        Select Ward
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div id="excoManager">
-
-                <p class="empty-state">
-                    Select a ward to manage its EXCO.
-                </p>
-
-            </div>
-
-        </div>
+        </a>
 
     </div>
 
 </section>
 
 
-<!-- =====================================================
-     CONTACT
-===================================================== -->
-
-<section
-    class="contact-section"
-    id="contact"
->
+<section class="contact-section">
 
     <div class="section-heading">
 
@@ -656,8 +189,7 @@
         </h2>
 
         <p>
-            Connect with Ekiti State Women of Influence,
-            Ado Local Government.
+            Contact the Ado Local Government Coordinator.
         </p>
 
     </div>
@@ -667,9 +199,7 @@
 
         <div>
 
-            <strong>
-                📍 Location
-            </strong>
+            <strong>📍 Location</strong>
 
             <p>
                 Ado Local Government,
@@ -681,25 +211,12 @@
 
         <div>
 
-            <strong>
-                📞 Phone
-            </strong>
+            <strong>📞 Ado LGA Coordinator</strong>
 
             <p>
-                Contact information coming soon
-            </p>
-
-        </div>
-
-
-        <div>
-
-            <strong>
-                ✉️ Email
-            </strong>
-
-            <p>
-                Contact information coming soon
+                <a href="tel:08061254006">
+                    08061254006
+                </a>
             </p>
 
         </div>
@@ -708,10 +225,8 @@
 
 </section>
 
+</main>
 
-<!-- =====================================================
-     FOOTER
-===================================================== -->
 
 <footer>
 
