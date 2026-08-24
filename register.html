@@ -23,7 +23,6 @@
 
 <body>
 
-
 <header class="site-header">
 
     <div class="header-container">
@@ -35,7 +34,7 @@
 
             <img
                 src="logo.jpeg"
-                alt="Logo"
+                alt="Ekiti State Women of Influence Logo"
                 class="site-logo"
             >
 
@@ -57,6 +56,7 @@
         <button
             class="menu-btn"
             id="menuBtn"
+            type="button"
         >
             ☰
         </button>
@@ -79,7 +79,8 @@
                 Wards
             </a>
 
-            <a href="register.html">
+            <a href="register.html"
+               class="active">
                 Register
             </a>
 
@@ -107,8 +108,8 @@
         </h2>
 
         <p>
-            Register with Ekiti State Women of Influence,
-            Ado Local Government.
+            Register as a member of Ekiti State
+            Women of Influence, Ado Local Government.
         </p>
 
     </div>
@@ -125,20 +126,24 @@
             <div class="section-title">
 
                 <h2>
-                    Register
+                    Registration Form
                 </h2>
 
                 <p>
-                    Fill in your details below.
-                    Your registration will be reviewed
-                    by the administrator.
+                    Please provide your correct
+                    information below.
                 </p>
 
             </div>
 
 
-            <form id="registrationForm">
+            <form
+                id="registrationForm"
+                novalidate
+            >
 
+
+                <!-- FULL NAME -->
 
                 <div class="form-group">
 
@@ -149,12 +154,16 @@
                     <input
                         type="text"
                         id="fullName"
+                        name="fullName"
                         required
+                        autocomplete="name"
                         placeholder="Enter your full name"
                     >
 
                 </div>
 
+
+                <!-- PHONE -->
 
                 <div class="form-group">
 
@@ -165,12 +174,16 @@
                     <input
                         type="tel"
                         id="phone"
+                        name="phone"
                         required
+                        autocomplete="tel"
                         placeholder="Enter your phone number"
                     >
 
                 </div>
 
+
+                <!-- WARD -->
 
                 <div class="form-group">
 
@@ -180,6 +193,7 @@
 
                     <select
                         id="ward"
+                        name="ward"
                         required
                     >
 
@@ -244,6 +258,8 @@
                 </div>
 
 
+                <!-- POLLING BOOTH -->
+
                 <div class="form-group">
 
                     <label for="pollingBooth">
@@ -253,12 +269,15 @@
                     <input
                         type="text"
                         id="pollingBooth"
+                        name="pollingBooth"
                         required
                         placeholder="Enter your polling booth"
                     >
 
                 </div>
 
+
+                <!-- ACCOUNT NAME -->
 
                 <div class="form-group">
 
@@ -269,12 +288,44 @@
                     <input
                         type="text"
                         id="accountName"
+                        name="accountName"
                         required
+                        autocomplete="off"
                         placeholder="Enter account name"
                     >
 
                 </div>
 
+
+                <!-- ACCOUNT NUMBER -->
+
+                <div class="form-group">
+
+                    <label for="accountNumber">
+                        Account Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="accountNumber"
+                        name="accountNumber"
+                        inputmode="numeric"
+                        maxlength="10"
+                        minlength="10"
+                        pattern="[0-9]{10}"
+                        required
+                        autocomplete="off"
+                        placeholder="Enter 10-digit account number"
+                    >
+
+                    <small class="input-help">
+                        Enter your 10-digit bank account number.
+                    </small>
+
+                </div>
+
+
+                <!-- BANK -->
 
                 <div class="form-group">
 
@@ -285,12 +336,16 @@
                     <input
                         type="text"
                         id="bankName"
+                        name="bankName"
                         required
+                        autocomplete="off"
                         placeholder="Enter bank name"
                     >
 
                 </div>
 
+
+                <!-- SUBMIT -->
 
                 <button
                     type="submit"
@@ -301,10 +356,14 @@
                 </button>
 
 
-                <p
+                <!-- MESSAGE -->
+
+                <div
                     id="formMessage"
                     class="form-message"
-                ></p>
+                    role="alert"
+                    aria-live="polite"
+                ></div>
 
 
             </form>
@@ -321,6 +380,7 @@
     <div class="container">
 
         <div class="footer-grid">
+
 
             <div>
 
@@ -376,7 +436,14 @@
                     </a>
                 </p>
 
+                <p>
+                    <a href="register.html">
+                        Register
+                    </a>
+                </p>
+
             </div>
+
 
         </div>
 
