@@ -1833,25 +1833,16 @@ async function loadMembersByWard() {
 ============================================================ */
 
 const EXCO_POSITIONS = [
-
-    "Chairperson",
-
-    "Vice Chairperson",
-
+    "LG Coodinator",
+    "Ward Coordinator",
+    "LG Deputy Coordinator"
+    "Deputy Ward Coordinator",
     "Secretary",
-
-    "Assistant Secretary",
-
-    "Treasurer",
-
-    "Financial Secretary",
-
-    "Public Relations Officer",
-
-    "Organising Secretary",
-
-    "Welfare Officer"
-
+    "Mobilization Officer",
+    "Women Empowerment Officer",
+    "Media/Publicity Officer",
+    "Welfare Officer",
+    "Polling Unit Officer"
 ];
 
 
