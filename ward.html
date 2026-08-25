@@ -21,9 +21,7 @@
 
 </head>
 
-
 <body>
-
 
 <header class="site-header">
 
@@ -108,11 +106,11 @@
             <div class="section-title">
 
                 <h2 id="wardTitle">
-                    Ward
+                    Loading Ward...
                 </h2>
 
                 <p id="wardDescription">
-                    Accepted members in this ward.
+                    Loading accepted members...
                 </p>
 
             </div>
@@ -127,7 +125,7 @@
             </div>
 
 
-            <div style="text-align:center; margin-top:30px;">
+            <div class="center-button">
 
                 <a
                     href="wards.html"
@@ -169,223 +167,5 @@
 
 <script src="script.js"></script>
 
-
-<script>
-
-document.addEventListener(
-    "DOMContentLoaded",
-    loadWard
-);
-
-
-async function loadWard() {
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    const ward =
-        Number(
-            params.get("ward")
-        );
-
-
-    const title =
-        document.getElementById(
-            "wardTitle"
-        );
-
-
-    const description =
-        document.getElementById(
-            "wardDescription"
-        );
-
-
-    const container =
-        document.getElementById(
-            "wardMembers"
-        );
-
-
-    if (
-        !ward ||
-        ward < 1 ||
-        ward > 13
-    ) {
-
-        title.textContent =
-            "Invalid Ward";
-
-        description.textContent =
-            "Please select a valid ward.";
-
-        container.innerHTML =
-            `
-            <div class="empty-state">
-                Invalid ward selected.
-            </div>
-            `;
-
-        return;
-
-    }
-
-
-    title.textContent =
-        `Ward ${ward}`;
-
-
-    description.textContent =
-        `Accepted members of Ward ${ward}.`;
-
-
-    try {
-
-        const members =
-            await supabaseRequest(
-                `members?status=eq.accepted&ward=eq.${ward}&select=full_name,phone,polling_booth,exco_position&order=full_name.asc`
-            );
-
-
-        if (
-            !members ||
-            members.length === 0
-        ) {
-
-            container.innerHTML =
-                `
-                <div class="empty-state">
-                    No accepted members in Ward ${ward} yet.
-                </div>
-                `;
-
-            return;
-
-        }
-
-
-        let html = `
-
-            <div class="member-table-wrapper">
-
-                <table class="member-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Name
-                            </th>
-
-                            <th>
-                                Phone
-                            </th>
-
-                            <th>
-                                Polling Booth
-                            </th>
-
-                            <th>
-                                EXCO
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-        `;
-
-
-        members.forEach(
-            member => {
-
-                html += `
-
-                    <tr>
-
-                        <td>
-                            ${escapeHTML(
-                                member.full_name
-                            )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                                member.phone
-                            )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                                member.polling_booth
-                            )}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(
-                                member.exco_position ||
-                                "—"
-                            )}
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        );
-
-
-        html += `
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        `;
-
-
-        container.innerHTML =
-            html;
-
-
-    } catch (error) {
-
-        console.error(
-            "WARD ERROR:",
-            error
-        );
-
-
-        container.innerHTML =
-            `
-            <div class="empty-state error">
-
-                Unable to load members.
-
-                <br><br>
-
-                ${escapeHTML(
-                    error.message
-                )}
-
-            </div>
-            `;
-
-    }
-
-}
-
-</script>
-
-
 </body>
-
 </html>
